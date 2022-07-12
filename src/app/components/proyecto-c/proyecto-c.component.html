@@ -1,0 +1,31 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-body text-center" style="text-align: center;">
+                    <h3 class="titulo">CREAR PROYECTO CURRICULAR</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="card">
+                <div class="card-body" style="text-align: center;">
+                    <h5 class="titulo">FACULTAD:</h5>
+                    <select>
+                        <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
+                    </select>
+                    <h5></h5>
+                    <h5 class="titulo">NOMBRE DEL PROYECTO CURRICULAR:</h5>
+                    <input type="text" name="" id="">
+                    <h5></h5>
+                    <button type="button" (click)="creaCarpeta()">SIGUIENTE</button>
+                    <button type="button" (click)="buscarFacultad()">LISTAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

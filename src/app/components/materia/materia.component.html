@@ -1,0 +1,41 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-body text-center" style="text-align: center;">
+                    <h3 class="titulo">CREAR MATERIA</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-6 offset-lg-3">
+            <div class="card">
+                <form [formGroup]="form" (ngSubmit)="creaCarpeta()">
+                    <div class="card-body" style="text-align: center;">
+                        <h5 class="titulo">FACULTAD:</h5>
+                    <select>
+                        <option>1 </option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                    <h5 class="titulo">PROYECTO CURRICULAR:</h5>
+                    <select>
+                        <option>1 </option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                        <h5 class="titulo">NOMBRE DE LA MATERIA:</h5>
+                        <input formControlName="materia" type="text" class="form-control" name="" id="">
+                        <h5 class="titulo">NÚMERO DE GRUPOS:</h5>
+                        <input type="text" name="" id="">
+                        <h5></h5>
+                        <button type="button"  type="submit">SIGUIENTE</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

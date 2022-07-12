@@ -1,0 +1,41 @@
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>GESTIÓN DE BITÁCORAS ACADÉMICAS</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3></h3>
+    <button type="button" *ngIf="!isLogin" class="col-lg-4 offset-lg-4" (click)="login()">INICIAR SESIÓN</button>
+    <app-facultad *ngIf="visibleF"></app-facultad>
+    <app-proyecto-c *ngIf="visibleP"></app-proyecto-c>
+    <app-materia *ngIf="visibleM"></app-materia>
+    <app-clase *ngIf="visibleC"></app-clase>
+    <app-bitacora *ngIf="visibleB"></app-bitacora>
+    <div *ngIf="visible" class="row mt-4">
+        <button type="button" class="col-lg-4 offset-lg-4" (click)="mostrarFacultad()">Crear Facultad</button>
+        <button type="button" class="col-lg-4 offset-lg-4" (click)="mostrarProyecto()">Crear Proyecto curricular</button>
+        <button type="button" class="col-lg-4 offset-lg-4" (click)="mostrarMateria()">Crear Materia</button>
+        <button type="button" class="col-lg-4 offset-lg-4" (click)="mostrarClase()">Registrar Clase</button>
+        <button type="button" class="col-lg-4 offset-lg-4" (click)="mostrarBitacora()">Generar Bitácora</button>
+    </div>
+</div>
+<div id="g_id_onload"
+     data-client_id="28332543331-tekrfvbp0lqkve1femo42dbai5gikk37.apps.googleusercontent.com"
+     data-context="use"
+     data-ux_mode="popup"
+     data-callback="login"
+     data-auto_prompt="false">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="outline"
+     data-text="$ {button.text}"
+     data-size="large"
+     data-logo_alignment="left">
+</div>
