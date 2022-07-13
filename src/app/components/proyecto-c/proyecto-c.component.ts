@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 
 declare var gapi: any;
 
@@ -8,10 +9,15 @@ declare var gapi: any;
   styleUrls: ['./proyecto-c.component.scss']
 })
 export class ProyectoCComponent implements OnInit {
-  fileMetadata: { name: string; mimeType: string; } | undefined;
+  fileMetadata: any;
   files: any[] = [];
+  form:any;
+  IdFacultad : any=null;
 
-  constructor() {
+  constructor(private formBuilder: FormBuilder,) {
+    this.form = this.formBuilder.group({
+      proyecto:''
+    });
     this.buscarFacultad();
    }
 
@@ -19,26 +25,33 @@ export class ProyectoCComponent implements OnInit {
     
   }
 
+  onSelect(val:any){
+    this.IdFacultad=val;
+  }
+
   creaCarpeta(){
+    let proyecto = this.form.get("proyecto")?.value;
     this.fileMetadata = {
-      'name': 'carpetaTesis',
-      'mimeType': 'application/vnd.google-apps.folder'
+      'name': proyecto,
+      'mimeType': 'application/vnd.google-apps.folder',
+      'parents': [this.IdFacultad]
     };
-    gapi.client.drive.files.create({
-      resource: this.fileMetadata,
-      fields: 'id'
-    }).then(function(response:any) {
-      console.log('Files:');
-      var files = response.result.files;
-      if (files && files.length > 0) {
-        for (var i = 0; i < files.length; i++) {
-          var file = files[i];
-          console.log(file.name + ' (' + file.id + ')');
-        }
-      } else {
-        console.log('No files found.');
-      }
-    });
+    gapi.client.drive.files.list({
+      "q": "name='"+proyecto+"' and '"+this.IdFacultad+"' in parents" 
+    })
+        .then((response:any) => {
+                // Handle the results here (response.result has the parsed body).
+                console.log("Response", response);
+                if (response.result.files.length == 0){
+                  gapi.client.drive.files.create({
+                    resource: this.fileMetadata,
+                    fields: 'id'
+                  }).then((response:any) =>{
+                    console.log('Files:' + response.result.files);
+                  });
+                }
+              }, (err:any) => { console.error("Execute error", err); })
+    
   }
 
   buscarFacultad(){
