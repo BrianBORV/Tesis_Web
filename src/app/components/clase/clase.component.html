@@ -12,53 +12,40 @@
     <div class="row mt-4">
         <div class="col-lg-6 offset-lg-3">
             <div class="card">
-                <div class="card-body" style="text-align: center;">
-                    <h5 class="titulo">FACULTAD:</h5>
-                    <select>
-                        <option>1 </option>
-                        <option>2</option>
-                        <option>3</option>
-                    </select>
-                    <h5 class="titulo">PROYECTO CURRICULAR:</h5>
-                    <select>
-                        <option>1 </option>
-                        <option>2</option>
-                        <option>3</option>
-                    </select>
-                    <h5 class="titulo">MATERIA:</h5>
-                        <select>
-                            <option>1 </option>
-                            <option>2</option>
-                            <option>3</option>
+                <form [formGroup]="form" (ngSubmit)="registrarClase()">
+                    <div class="card-body" style="text-align: center;">
+                        <h5 class="titulo">FACULTAD:</h5>
+                        <select (change)='onSelect(val.value)' #val>
+                            <option disabled value="null" selected>--Seleccione Facultad--</option>
+                            <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
                         </select>
-                    <h5 class="titulo">PERIODO:</h5>
-                    <select>
-                        <option>1 </option>
-                        <option>2</option>
-                        <option>3</option>
-                    </select>
-                    <h5 class="titulo">GRUPO:</h5>
-                    <select>
-                        <option>1 </option>
-                        <option>2</option>
-                        <option>3</option>
-                    </select>
-                    <h5 class="titulo">FECHA    :</h5>
-                    <input type="date" id="start" name="trip-start" value="2022-04-23" min="2022-01-01" max="2025-12-31">
-                    <h5 class="titulo">HORARIO:</h5>
-                    <div>
-                        Inicio: <input>
-                        Fin: <input>
+                        <h5 class="titulo">PROYECTO CURRICULAR:</h5>
+                        <select [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
+                            <option disabled value="null">--Seleccione Proyecto--</option>
+                            <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">{{filesP[i].name}}</option>
+                        </select>
+                        <h5 class="titulo">MATERIA:</h5>
+                            <select [(ngModel)] = "IdMateria"  [ngModelOptions]="{standalone: true}"  (change)='onSelectM(valM.value)' #valM>
+                                <option disabled value="null">--Seleccione Materia--</option>
+                                <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">{{filesM[i].name}}</option>
+                            </select>
+                        <h5 class="titulo">FECHA    :</h5>
+                        <input formControlName="clase" type="date" id="start" name="trip-start" value="2022-04-23" min="2022-01-01" max="2025-12-31">
+                        <h5 class="titulo">HORARIO:</h5>
+                        <div>
+                            <label> Inicio: </label><input formControlName="inicio" type="time" value="06:00 am">
+                            <label> Fin: </label><input formControlName="fin" type="time" value='06:00 pm'>
+                        </div>
+                        <h5 class="titulo">DESCRIPCIÓN:</h5>
+                        <textarea formControlName="texto" name="" id="" cols="40" rows="10"></textarea>
+                        <h5 class="titulo">HERRAMIENTAS:</h5>
+                        <div>
+                            <textarea name="" id="" cols="30" rows="5"></textarea>
+                            <button>ANEXOS</button>
+                        </div>
+                        <button>REGISTRAR</button>
                     </div>
-                    <h5 class="titulo">DESCRIPCIÓN:</h5>
-                    <textarea name="" id="" cols="40" rows="10"></textarea>
-                    <h5 class="titulo">HERRAMIENTAS:</h5>
-                    <div>
-                        <textarea name="" id="" cols="30" rows="5"></textarea>
-                        <button>ANEXOS</button>
-                    </div>
-                    <button>REGISTRAR</button>
-                </div>
+                </form>
             </div>
         </div>
     </div>

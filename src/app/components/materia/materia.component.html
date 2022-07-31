@@ -15,23 +15,21 @@
                 <form [formGroup]="form" (ngSubmit)="creaCarpeta()">
                     <div class="card-body" style="text-align: center;">
                         <h5 class="titulo">FACULTAD:</h5>
-                    <select>
-                        <option>1 </option>
-                        <option>2</option>
-                        <option>3</option>
+                    <select (change)='onSelect(val.value)' #val>
+                        <option disabled value="null" selected>--Seleccione Facultad--</option>
+                        <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
                     </select>
                     <h5 class="titulo">PROYECTO CURRICULAR:</h5>
-                    <select>
-                        <option>1 </option>
-                        <option>2</option>
-                        <option>3</option>
+                    <select [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
+                        <option disabled value="null">--Seleccione Proyecto--</option>
+                        <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">{{filesP[i].name}}</option>
                     </select>
                         <h5 class="titulo">NOMBRE DE LA MATERIA:</h5>
                         <input formControlName="materia" type="text" class="form-control" name="" id="">
-                        <h5 class="titulo">NÚMERO DE GRUPOS:</h5>
-                        <input type="text" name="" id="">
+                        <h5 class="titulo">NÚMERO DE GRUPO:</h5>
+                        <input formControlName="grupo" type="text" class="form-control" name="" id="">
                         <h5></h5>
-                        <button type="button"  type="submit">SIGUIENTE</button>
+                        <button type="button"  type="submit">SIGUIENTE</button>          
                     </div>
                 </form>
             </div>

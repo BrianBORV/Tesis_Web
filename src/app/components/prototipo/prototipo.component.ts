@@ -1,57 +1,64 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, } from '@angular/core';
+import { GapiService } from '../../services/gapiService'
+
 
 declare var gapi: any;
-
-
 
 @Component({
   selector: 'app-prototipo',
   templateUrl: './prototipo.component.html',
   styleUrls: ['./prototipo.component.scss']
 })
-export class PrototipoComponent implements OnInit {
+export class PrototipoComponent implements AfterViewInit  {
   isLogin: boolean = false;
   fileMetadata: any;
 // If modifying these scopes, delete token.json.
 
-  initClient() {
   
-      // It's OK to expose these credentials, they are client safe.
-      let initObj = {
-        apiKey: 'AIzaSyDnkotdvUH83-K_M7h3i-Y6p2AJwihAz8Q',
-        clientId: '28332543331-tekrfvbp0lqkve1femo42dbai5gikk37.apps.googleusercontent.com',
-        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
-        scope: 'https://www.googleapis.com/auth/drive'
-      };
-      
-      gapi.client.init(initObj);
-      
+  constructor(private gapiServ: GapiService) {
+    this.isLogin = Boolean(localStorage.getItem("isLogin"));
+    console.log(this.isLogin)
+    
+   }
+
+   initClient() {
+  
+    // It's OK to expose these credentials, they are client safe.
+    let initObj = {
+      apiKey: 'AIzaSyDnkotdvUH83-K_M7h3i-Y6p2AJwihAz8Q',
+      clientId: '28332543331-tekrfvbp0lqkve1femo42dbai5gikk37.apps.googleusercontent.com',
+      discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest', 'https://docs.googleapis.com/$discovery/rest?version=v1'],
+      scope: 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/documents'
+    };
+
+    
+    //this.gapiServ.updateGapi(gapi);
+    gapi.client.init(initObj);
+    
 
   }
 
-
-  constructor() {
-   }
-
-  ngOnInit(): void {
-    gapi.load('client:auth2', this.initClient);
-    if (gapi) {
-      if (this.isLogin) {
-        this.verificarCarpetaPadre();
-        this.mostrarOpciones();
-      }else{
-        //this.login();
-        //
-      }
-    }
+  ngAfterViewInit(): void {
+   
+    if(this.isLogin){
+      this.gapiServ.gapi$.subscribe((data)=>{
+        if (data) {
+          gapi = data;          
+        }
+      })
+    }else{
+      gapi.load('client:auth2', this.initClient);
+    }       
     
   }
 
   login(){
     gapi.auth2.getAuthInstance().signIn();
     this.isLogin=gapi.auth2.getAuthInstance().isSignedIn.get();
+    localStorage.setItem("isLogin",String(this.isLogin) );
     console.log(this.isLogin);
-    gapi.auth2.getAuthInstance().signIn().then(this.mostrarOpciones());   
+    gapi.auth2.getAuthInstance().signIn().then(this.mostrarOpciones());
+    this.gapiServ.updateGapi(gapi);
   }
 
   verificarCarpetaPadre(){
@@ -97,36 +104,10 @@ export class PrototipoComponent implements OnInit {
     });
   }
 
-  visible:boolean=false;
-  visibleF:boolean=false;
-  visibleP:boolean=false;
-  visibleM:boolean =false;
-  visibleC:boolean= false;
-  visibleB:boolean =false;
-
   mostrarOpciones(){
-    this.visible = this.visible?false:true;
     this.verificarCarpetaPadre();
-  }
-  mostrarMateria(){
-    this.visibleM = this.visibleM?false:true;
-    this.visible = this.visible?false:true;
-  }
-  mostrarClase(){
-    this.visibleC = this.visibleC?false:true;
-    this.visible = this.visible?false:true;
-  }
-  mostrarBitacora(){
-    this.visibleB = this.visibleB?false:true;
-    this.visible = this.visible?false:true;
-  }
-  mostrarFacultad(){
-    this.visibleF = this.visibleM?false:true;
-    this.visible = this.visible?false:true;
-  }
-  mostrarProyecto(){
-    this.visibleP = this.visibleM?false:true;
-    this.visible = this.visible?false:true;
+    console.log(gapi.client.docs.documents);
+    console.log(gapi.client.drive.files.create);
   }
 
 }

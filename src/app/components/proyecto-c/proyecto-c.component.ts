@@ -11,6 +11,7 @@ declare var gapi: any;
 export class ProyectoCComponent implements OnInit {
   fileMetadata: any;
   files: any[] = [];
+  isFiles: boolean = false;
   form:any;
   IdFacultad : any=null;
 
@@ -18,11 +19,11 @@ export class ProyectoCComponent implements OnInit {
     this.form = this.formBuilder.group({
       proyecto:''
     });
-    this.buscarFacultad();
+    
    }
 
   ngOnInit(): void {
-    
+    this.buscarFacultad();
   }
 
   onSelect(val:any){
@@ -54,9 +55,9 @@ export class ProyectoCComponent implements OnInit {
     
   }
 
-  buscarFacultad(){
+  async buscarFacultad(){
     try {
-      gapi.client.drive.files.list({
+      await gapi.client.drive.files.list({
         "q": "mimeType='application/vnd.google-apps.folder' and '"+localStorage.getItem("IdBitacora")+"' in parents"
       }).then((res:any) => {
         console.log(res);
@@ -64,6 +65,8 @@ export class ProyectoCComponent implements OnInit {
         this.files.forEach(function(file: { name: any; id: any; }) {
           console.log('Found file:', file.name, file.id);
         });
+
+        this.isFiles = true;
       });
       
     } catch (err) {

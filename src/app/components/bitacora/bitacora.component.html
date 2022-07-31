@@ -11,37 +11,38 @@
     <div class="row mt-4">
         <div class="col-lg-6 offset-lg-3">
             <div class="card">
-                <div class="card-body" style="text-align: center;">
-                    <h5 class="titulo">NOMBRE COMPLETO:</h5>
-                    <input type="text" name="" id="">
-                    <h5 class="titulo">PERIODO DE INFORME:</h5>
-                    <input type="text" name="" id="">
-                    <h5></h5>
-                    <div>
-                        Inicio Periodo: <input>
-                        Fin Periodo: <input>
-                    </div>
-                    <h5 class="titulo">FACULTAD:</h5>
-                    <input type="text" name="" id="">
-                    <h5 class="titulo">PROYECTO CURRICULAR:</h5>
-                    <input type="text" name="" id="">
-                    <div>
-                        <h5 class="titulo">MATERIA:</h5>
-                        <select>
-                            <option>1 </option>
-                            <option>2</option>
-                            <option>3</option>
+                <form [formGroup]="form" (ngSubmit)="generarBitacora()">
+                    <div class="card-body" style="text-align: center;">
+                        <h5 class="titulo">NOMBRE COMPLETO:</h5>
+                        <input type="text" name="" id="" formControlName="nombre">
+                        <h5 class="titulo">PERIODO DE INFORME:</h5>
+                        <input type="text" name="" id="" formControlName="periodo">
+                        <h5></h5>
+                        <div>
+                            <label> Inicio del Periodo: </label><input formControlName="inicio" type="date" id="start" name="trip-start" value="2022-04-23" min="2022-01-01" max="2025-12-31">
+                            <label> Fin del Periodo: </label><input formControlName="fin" type="date" id="start" name="trip-start" value="2022-04-23" min="2022-01-01" max="2025-12-31">
+                        </div>
+                        <h5 class="titulo">FACULTAD:</h5>
+                        <select (change)='onSelect(val.value)' #val>
+                            <option disabled value="null" selected>--Seleccione Facultad--</option>
+                            <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
                         </select>
-                    <h5 class="titulo">GRUPO:</h5>
-                    <select>
-                        <option>1 </option>
-                        <option>2</option>
-                        <option>3</option>
-                    </select>
+                        <h5 class="titulo">PROYECTO CURRICULAR:</h5>
+                        <select [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
+                            <option disabled value="null">--Seleccione Proyecto--</option>
+                            <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">{{filesP[i].name}}</option>
+                        </select>
+                        <div>
+                            <h5 class="titulo">MATERIA:</h5>
+                            <select [(ngModel)] = "IdMateria"  [ngModelOptions]="{standalone: true}"  (change)='onSelectM(valM.value)' #valM>
+                                <option disabled value="null">--Seleccione Materia--</option>
+                                <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">{{filesM[i].name}}</option>
+                            </select>
+                        </div>
+                        <h5></h5>
+                        <button>GENERAR</button>
                     </div>
-                    <h5></h5>
-                    <button type="button">GENERAR</button>
-                </div>
+                </form>
             </div>
         </div>
     </div>

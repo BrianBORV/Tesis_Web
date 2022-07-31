@@ -10,17 +10,13 @@
     </div>
     <h3></h3>
     <button type="button" *ngIf="!isLogin" class="col-lg-4 offset-lg-4" (click)="login()">INICIAR SESIÓN</button>
-    <app-facultad *ngIf="visibleF"></app-facultad>
-    <app-proyecto-c *ngIf="visibleP"></app-proyecto-c>
-    <app-materia *ngIf="visibleM"></app-materia>
-    <app-clase *ngIf="visibleC"></app-clase>
-    <app-bitacora *ngIf="visibleB"></app-bitacora>
-    <div *ngIf="visible" class="row mt-4">
-        <button type="button" class="col-lg-4 offset-lg-4" (click)="mostrarFacultad()">Crear Facultad</button>
-        <button type="button" class="col-lg-4 offset-lg-4" (click)="mostrarProyecto()">Crear Proyecto curricular</button>
-        <button type="button" class="col-lg-4 offset-lg-4" (click)="mostrarMateria()">Crear Materia</button>
-        <button type="button" class="col-lg-4 offset-lg-4" (click)="mostrarClase()">Registrar Clase</button>
-        <button type="button" class="col-lg-4 offset-lg-4" (click)="mostrarBitacora()">Generar Bitácora</button>
+    <!-- <app-facultad *ngIf="visibleF"></app-facultad> -->
+    <div *ngIf="isLogin" class="row mt-4">
+        <button type="button" class="col-lg-4 offset-lg-4" routerLink="/registrar_facultad">Crear Facultad</button>
+        <button type="button" class="col-lg-4 offset-lg-4" routerLink="/registrar_proyecto">Crear Proyecto curricular</button>
+        <button type="button" class="col-lg-4 offset-lg-4" routerLink="/registrar_materia">Crear Materia</button>
+        <button type="button" class="col-lg-4 offset-lg-4" routerLink="/registrar_clase">Registrar Clase</button>
+        <button type="button" class="col-lg-4 offset-lg-4" routerLink="/generar_bitacora">Generar Bitácora</button>
     </div>
 </div>
 <div id="g_id_onload"

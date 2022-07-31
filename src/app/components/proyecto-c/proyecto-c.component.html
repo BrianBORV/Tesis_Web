@@ -15,7 +15,7 @@
                 <form  [formGroup]="form">
                     <div class="card-body" style="text-align: center;">
                         <h5 class="titulo">FACULTAD:</h5>
-                        <select (change)='onSelect(val.value)' #val>
+                        <select *ngIf="isFiles" (change)='onSelect(val.value)' #val>
                             <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
                         </select>
                         <h5></h5>
