@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Prototipo | Registrar Clase</title>
+    <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800&display=swap" rel="stylesheet"> 
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="#">Inicio</a>
+            <a href="#">Contacto</a>
+        </nav>
+        <section class="textos-header">
+            <h1>PROTOTIPO DE HERRAMIENTA PARA LA CREACION Y GESTION DE BITACORAS ACADEMICAS BASADA EN APIS DE GOOGLE</h1>
+            <h2></h2>
+        </section>
+        <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none"
+                style="height: 100%; width: 100%;">
+                <path d="M0.00,49.98 C150.00,150.00 349.20,-50.00 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
+                    style="stroke: none; fill: #fff;"></path>
+            </svg></div>
+    </header>
+    <main>
+        <section class="contenedor sobre-nosotros">
+            <h2 class="titulo">Registrar Clase</h2>
+            <div class="contenedor-sobre-nosotros">
+                <img src="imgs/ilustracion2.svg" alt="" class="imagen-about-us">
+                <div class="contenido-textos">
+                    <h3><span>1</span>Resumen</h3>
+                    <p>Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar.</p>
+                    <h3><span>2</span>Guia rapida</h3>
+                    <p>Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar.</p>
+                </div>
+            </div>
+        </section>
+        <section class="menu">
+            <div class="contenedor">
+                <h2 class="titulo">Registrar Clase</h2>            
+                <div class="formulario">
+                    <form [formGroup]="form" (ngSubmit)="registrarClase()">
+                        <div style="text-align: center;">
+                            <h5 class="titulo-forms">FACULTAD:</h5>
+                            <select (change)='onSelect(val.value)' #val>
+                                <option disabled value="null" selected>--Seleccione Facultad--</option>
+                                <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
+                            </select>
+                            <h5 class="titulo-forms">PROYECTO CURRICULAR:</h5>
+                            <select [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
+                                <option disabled value="null">--Seleccione Proyecto--</option>
+                                <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">{{filesP[i].name}}</option>
+                            </select>
+                            <h5 class="titulo-forms">MATERIA:</h5>
+                                <select [(ngModel)] = "IdMateria"  [ngModelOptions]="{standalone: true}"  (change)='onSelectM(valM.value)' #valM>
+                                    <option disabled value="null">--Seleccione Materia--</option>
+                                    <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">{{filesM[i].name}}</option>
+                                </select>
+                            <h5 class="titulo-forms">FECHA    :</h5>
+                            <input formControlName="clase" type="date" id="start" name="trip-start" value="2022-04-23" min="2022-01-01" max="2025-12-31">
+                            <h5 class="titulo-forms">HORARIO:</h5>
+                            <div>
+                                <label> Inicio: </label><input formControlName="inicio" type="time" value="06:00 am">
+                                <label> Fin: </label><input formControlName="fin" type="time" value='06:00 pm'>
+                            </div>
+                            <h5 class="titulo-forms">DESCRIPCIÓN:</h5>
+                            <textarea formControlName="texto" name="" id="" rows="10" style="width: 80%;"></textarea>
+                            <h5 class="titulo-forms">HERRAMIENTAS:</h5>
+                            <div>
+                                <textarea name="" id="" rows="5" style="width: 60%;"></textarea>
+                                <button class="button4">
+                                    ANEXOS
+                                </button>
+                            </div>
+                            <button class="button4">
+                                REGISTRAR
+                            </button>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="contenedor-footer">
+            <div class="content-foo">
+                <h4>Información</h4>
+                <p>Prototipo herramienta de gestión y creación bitácoras academicas</p>
+                <p>Version 0.0.1</p>
+            </div>
+            <div class="content-foo">
+                <h4>Contacto</h4>
+                <p>Bogotá, Colombia</p>
+                <p>Brian Orlando Rodriguez Velandia</p>
+                <p> +57 300 444 73 47</p>
+                <p>Julian Camilo Benavides Gamboa</p>
+                <p> +57 314 332 86 74</p>
+            </div>
+        </div>
+        <h6 class="titulo-final">&copy; Brian Rodriguez & Julian Benavides© 2022. All rights reserved</h6>
+    </footer>
+</body>
+
+</html>
