@@ -28,7 +28,8 @@ export class ClaseComponent implements OnInit {
       clase:'',
       inicio: '',
       fin:'',
-      texto:''
+      texto:'',
+      anexos:''
     });
    }
 
@@ -77,6 +78,7 @@ export class ClaseComponent implements OnInit {
     let inicio = this.form.get("inicio")?.value;
     let fin = this.form.get("fin")?.value;
     let texto = this.form.get("texto")?.value;
+    let anexos = this.form.get("anexos")?.value;
     let request:  any[] = [];
   
     request = [
@@ -331,7 +333,7 @@ export class ClaseComponent implements OnInit {
   },
   {
     "replaceAllText": {
-      "replaceText": "081",
+      "replaceText": anexos,
       "containsText": {
         "text": "{{ANEXOS}}"
       }
@@ -746,20 +748,6 @@ export class ClaseComponent implements OnInit {
             "updateTextStyle": {
               "fields": "*",
               "textStyle": {
-                "weightedFontFamily": {
-                  "fontFamily": "Calibri"
-                }
-              },
-              "range": {
-                "startIndex": body.content[2].startIndex,
-                "endIndex": body.content[3].endIndex
-              }
-            }
-          },
-          {
-            "updateTextStyle": {
-              "fields": "*",
-              "textStyle": {
                 "bold": true
                 
               },
@@ -845,6 +833,20 @@ export class ClaseComponent implements OnInit {
               }
             }
             
+          },
+          {
+            "updateTextStyle": {
+              "fields": "*",
+              "textStyle": {
+                "weightedFontFamily": {
+                  "fontFamily": "Calibri"
+                }
+              },
+              "range": {
+                "startIndex": body.content[2].startIndex,
+                "endIndex": body.content[3].endIndex
+              }
+            }
           }
         ]
         await gapi.client.docs.documents.batchUpdate({

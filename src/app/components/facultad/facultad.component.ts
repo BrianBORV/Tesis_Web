@@ -38,7 +38,7 @@ export class FacultadComponent implements OnInit {
         'parents': [padre]
       };
       gapi.client.drive.files.list({
-        "q": "name='"+facultad+"'"
+        "q": "name='"+facultad+"' and '"+padre+"' in parents"
       })
           .then((response:any) => {
                   // Handle the results here (response.result has the parsed body).
@@ -54,17 +54,6 @@ export class FacultadComponent implements OnInit {
                 }, (err:any) => { console.error("Execute error", err); })
     }, (err:any) => { console.error("Execute error", err); })
     
-  }
-
-  buscar(){
-    return gapi.client.drive.files.list({
-      "q": "name='XXX'"
-    })
-        .then(function(response:any) {
-                // Handle the results here (response.result has the parsed body).
-                console.log("Response", response.result.files);
-              },
-              function(err:any) { console.error("Execute error", err); });
   }
 
 }

@@ -16,6 +16,7 @@
                     <div class="card-body" style="text-align: center;">
                         <h5 class="titulo">FACULTAD:</h5>
                         <select *ngIf="isFiles" (change)='onSelect(val.value)' #val>
+                            <option disabled value="null" selected>--Seleccione Facultad--</option>
                             <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
                         </select>
                         <h5></h5>
@@ -23,7 +24,6 @@
                         <input type="text" name="" id="" formControlName="proyecto">
                         <h5></h5>
                         <button type="button" (click)="creaCarpeta()">SIGUIENTE</button>
-                        <button type="button" (click)="buscarFacultad()">LISTAR</button>
                     </div>
                 </form>
             </div>

@@ -271,6 +271,165 @@ export class BitacoraComponent implements OnInit {
         "requests": request2
       }
     })
+    await gapi.client.docs.documents.get({
+      "documentId": this.IdBitacora
+    }).then(async (response:any)=>{
+      var body=response.result.body;
+      console.log(body)
+      let request3:any[]=[];
+      request3=[
+        {
+          "updateTextStyle": {
+            "fields": "*",
+            "textStyle": {
+              "fontSize": {
+                "unit": "PT",
+                "magnitude": 12
+              }
+              
+            },
+            "range": {
+              "startIndex": body.content[1].startIndex,
+              "endIndex": body.content[3].endIndex
+              
+            }
+          }
+          
+        },
+        {
+          "updateTextStyle": {
+            "fields": "bold",
+            "textStyle": {
+              "bold": true
+              
+            },
+            "range": {
+              "startIndex": 1,
+              "endIndex": body.content[3].table.tableRows[0].endIndex
+              
+            }
+          }
+          
+        },
+        {
+          "updateParagraphStyle": {
+            "fields": "alignment",
+            "paragraphStyle": {
+              "alignment": "CENTER"
+              
+            },
+            "range": {
+              "startIndex": 1,
+              "endIndex": body.content[3].table.tableRows[1].endIndex
+              
+            }
+          }
+          
+        },
+        {
+          "updateParagraphStyle": {
+            "fields": "alignment",
+            "paragraphStyle": {
+              "alignment": "CENTER"
+              
+            },
+            "range": {
+              "startIndex": body.content[3].table.tableRows[2].tableCells[0].startIndex,
+              "endIndex": body.content[3].table.tableRows[2].tableCells[0].endIndex
+              
+            }
+          }
+          
+        },
+        {
+          "updateTextStyle": {
+            "fields": "bold",
+            "textStyle": {
+              "bold": true
+              
+            },
+            "range": {
+              "startIndex": body.content[3].table.tableRows[2].tableCells[0].startIndex,
+              "endIndex": body.content[3].table.tableRows[2].tableCells[0].endIndex
+              
+            }
+          }
+          
+        },
+        {
+          "updateTableCellStyle": {
+            "fields": "backgroundColor",
+            "tableCellStyle": {
+            "contentAlignment": "MIDDLE",
+              "backgroundColor": {
+                "color": {
+                  "rgbColor": {
+                    "blue": 0.8509804,
+                    "green": 0.8509804,
+                    "red": 0.8509804
+                  }
+                }
+              }
+              
+            },
+            "tableRange": {
+              "tableCellLocation": {
+                "columnIndex": 0,
+                "rowIndex": 0,
+                "tableStartLocation": {
+                  "index":  body.content[3].startIndex
+                  
+                }
+              },
+              "columnSpan": 5 ,
+              "rowSpan": 1
+            }
+            
+          }
+          
+        },
+        {
+          "updateTableCellStyle": {
+            "fields": "backgroundColor",
+            "tableCellStyle": {
+            "contentAlignment": "MIDDLE",
+              "backgroundColor": {
+                "color": {
+                  "rgbColor": {
+                    "blue": 0.8509804,
+                    "green": 0.8509804,
+                    "red": 0.8509804
+                  }
+                }
+              }
+              
+            },
+            "tableRange": {
+              "tableCellLocation": {
+                "columnIndex": 0,
+                "rowIndex": 2,
+                "tableStartLocation": {
+                  "index":  body.content[3].startIndex
+                  
+                }
+              },
+              "columnSpan": 5 ,
+              "rowSpan": 1
+            }
+            
+          }
+          
+        }
+        
+      ]
+      await gapi.client.docs.documents.batchUpdate({
+        "documentId": this.IdBitacora, 
+        "resource": {
+          "requests": request3
+        }
+      })
+    })
+    
     
   }
 
@@ -739,7 +898,7 @@ export class BitacoraComponent implements OnInit {
           },
           {
             "updateTextStyle": {
-              "fields": "*",
+              "fields": "bold",
               "textStyle": {
                 "bold": true
                 
@@ -754,7 +913,7 @@ export class BitacoraComponent implements OnInit {
           },
           {
             "updateTextStyle": {
-              "fields": "*",
+              "fields": "bold",
               "textStyle": {
                 "bold": true
                 
@@ -769,7 +928,7 @@ export class BitacoraComponent implements OnInit {
           },
           {
             "updateTextStyle": {
-              "fields": "*",
+              "fields": "bold",
               "textStyle": {
                 "bold": true
                 
@@ -784,7 +943,7 @@ export class BitacoraComponent implements OnInit {
           },
           {
             "updateTextStyle": {
-              "fields": "*",
+              "fields": "bold",
               "textStyle": {
                 "bold": true
                 
@@ -799,7 +958,7 @@ export class BitacoraComponent implements OnInit {
           },
           {
             "updateTextStyle": {
-              "fields": "*",
+              "fields": "bold",
               "textStyle": {
                 "bold": true
                 
@@ -814,7 +973,7 @@ export class BitacoraComponent implements OnInit {
           },
           {
             "updateTextStyle": {
-              "fields": "*",
+              "fields": "bold",
               "textStyle": {
                 "bold": true
                 
@@ -826,7 +985,8 @@ export class BitacoraComponent implements OnInit {
               }
             }
             
-          }
+          },
+          
         ]
         await gapi.client.docs.documents.batchUpdate({
           "documentId": this.IdBitacora, 
@@ -1205,7 +1365,7 @@ export class BitacoraComponent implements OnInit {
             "segmentId": header,
             "index": 7
           },
-          "text": " UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS\n\n"+this.nombreFacultad+"\n Proyecto Curricular en "+this.nombreProyecto+""
+          "text": " UNIVERSIDAD DISTRITAL FRANCISCO JOSÉ DE CALDAS\n\n"+this.nombreFacultad+"\nProyecto Curricular en "+this.nombreProyecto+""
         }
       },
       ]
