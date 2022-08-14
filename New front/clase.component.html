@@ -34,9 +34,9 @@
                 <img src="imgs/ilustracion2.svg" alt="" class="imagen-about-us">
                 <div class="contenido-textos">
                     <h3><span>1</span>Resumen</h3>
-                    <p>Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar.</p>
+                    <p>Por medio de la siguiente pantalla se podran introducir y seleccionar los datos necesarios para realizar el registro de actividades llevadas acabo en una sesion de clase.</p>
                     <h3><span>2</span>Guia rapida</h3>
-                    <p>Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar Llenar.</p>
+                    <p>Completando los campos especificados a continuacion, los cuales se alimentan de los directorios creados en el drive del docente se genera un registro con las actividades realizadas en clase dejando constancia de lo realizado en la misma.</p>
                 </div>
             </div>
         </section>
@@ -47,32 +47,34 @@
                     <form [formGroup]="form" (ngSubmit)="registrarClase()">
                         <div style="text-align: center;">
                             <h5 class="titulo-forms">FACULTAD:</h5>
-                            <select (change)='onSelect(val.value)' #val>
+                            <select class="decoration-inputs" style="width: 80%;" (change)='onSelect(val.value)' #val>
                                 <option disabled value="null" selected>--Seleccione Facultad--</option>
                                 <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
                             </select>
                             <h5 class="titulo-forms">PROYECTO CURRICULAR:</h5>
-                            <select [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
+                            <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
                                 <option disabled value="null">--Seleccione Proyecto--</option>
                                 <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">{{filesP[i].name}}</option>
                             </select>
                             <h5 class="titulo-forms">MATERIA:</h5>
-                                <select [(ngModel)] = "IdMateria"  [ngModelOptions]="{standalone: true}"  (change)='onSelectM(valM.value)' #valM>
+                                <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdMateria"  [ngModelOptions]="{standalone: true}"  (change)='onSelectM(valM.value)' #valM>
                                     <option disabled value="null">--Seleccione Materia--</option>
                                     <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">{{filesM[i].name}}</option>
                                 </select>
                             <h5 class="titulo-forms">FECHA    :</h5>
-                            <input formControlName="clase" type="date" id="start" name="trip-start" value="2022-04-23" min="2022-01-01" max="2025-12-31">
+                            <input class="decoration-inputs" style="width: 40%;" formControlName="clase" type="date" id="start" name="trip-start" min="2022-01-01" max="2025-12-31">
                             <h5 class="titulo-forms">HORARIO:</h5>
                             <div>
-                                <label> Inicio: </label><input formControlName="inicio" type="time" value="06:00 am">
-                                <label> Fin: </label><input formControlName="fin" type="time" value='06:00 pm'>
+                                <label> Inicio: </label>
+                                <input class="decoration-inputs" formControlName="inicio" type="time" value="06:00 am">
+                                <label> Fin: </label>
+                                <input class="decoration-inputs" formControlName="fin" type="time" value='06:00 pm'>
                             </div>
                             <h5 class="titulo-forms">DESCRIPCIÓN:</h5>
-                            <textarea formControlName="texto" name="" id="" rows="10" style="width: 80%;"></textarea>
+                            <textarea formControlName="texto" name="" id="" rows="10" class="decoration-inputs" style="width: 80%;" ></textarea>
                             <h5 class="titulo-forms">HERRAMIENTAS:</h5>
-                            <div>
-                                <textarea name="" id="" rows="5" style="width: 60%;"></textarea>
+                            <div style="padding-bottom: 10px;">
+                                <textarea name="" id="" rows="5" class="decoration-inputs" style="width: 60%;" ></textarea>
                                 <button class="button4">
                                     ANEXOS
                                 </button>
