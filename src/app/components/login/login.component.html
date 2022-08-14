@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Prototipo | Principal</title>
+    <title>Prototipo | Bitacoras Clases</title>
     <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="/css/estilos.css">
+   <!--  <link rel="stylesheet" href="../../css/estilos.css"> -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800&display=swap" rel="stylesheet"> 
 </head>
 
@@ -31,54 +31,20 @@
         <section class="contenedor sobre-nosotros">
             <h2 class="titulo">Introduccion</h2>
             <div class="contenedor-sobre-nosotros">
-                <img src="../imgs/ilustracion2.svg" alt="" class="imagen-about-us">
+                <img src="imgs/ilustracion2.svg" alt="" class="imagen-about-us">
                 <div class="contenido-textos">
                     <h3><span>1</span>Resumen</h3>
                     <p>La siguiente herramienta busca simplificar el proceso de generacion de informes academicos como un material de soporte e historicos de las clases impartidas por un docente.</p>
                     <h3><span>2</span>Guia rapida</h3>
-                    <p>Por medio de las siguientes opciones se le permitira a un docente, mantener constancia y registro de las clases impartidas y las actividades realizadas junto con la generacion de un documento que lo respalde el cual estara almacenado en su Google drive asociado a su correo institucional.</p>
+                    <p>Esta interfaz permite realiza la verificacion de credenciales por medio de la api de inicio de sesion de una cuenta de correo google para acceder al uso de la herramienta de generacion de bitacoras.</p>
                 </div>
             </div>
         </section>
         <section class="menu">
             <div class="contenedor">
                 <h2 class="titulo">Menu</h2>
-                <div class="galeria-port">
-                    <div class="imagen-port">
-                        <img src="imgs/facultad.jpg" alt="">
-                        <div class="hover-galeria">
-                            <img src="imgs/facultad-hover.png" alt="" onclick="location.href='facultad.component.html'">
-                            <p>Añadir Facultad</p>
-                        </div>
-                    </div>
-                    <div class="imagen-port">
-                        <img src="imgs/proyecto.jpg" alt="">
-                        <div class="hover-galeria">
-                            <img src="imgs/proyecto-hover.png" alt="" onclick="location.href='proyecto-c.component.html'">
-                            <p>Añadir Proyecto</p>
-                        </div>
-                    </div>
-                    <div class="imagen-port">
-                        <img src="imgs/materia.jpg" alt="">
-                        <div class="hover-galeria">
-                            <img src="imgs/materia-hover.png" alt="" onclick="location.href='materia.component.html'">
-                            <p>Añadir Materia</p>
-                        </div>
-                    </div>
-                    <div class="imagen-port">
-                        <img src="imgs/clase.jpg" alt="">
-                        <div class="hover-galeria">
-                            <img src="imgs/clase-hover.png" alt="" onclick="location.href='clase.component.html'">
-                            <p>Registrar Clase</p>
-                        </div>
-                    </div>
-                    <div class="imagen-port">
-                        <img src="imgs/informe.jpg" alt="">
-                        <div class="hover-galeria">
-                            <img src="imgs/informe-hover.png" alt="" onclick="location.href='bitacora.component.html'">
-                            <p>Generar Bitacora</p>
-                        </div>
-                    </div>
+                <div style="display:flex; justify-content:center; align-items:center;">
+                    <button style="padding: 10px;" class="button4" type="button" *ngIf="!isLogin" class="col-lg-4 offset-lg-4" (click)="login()" routerLink="/menu">INICIAR SESIÓN</button>
                 </div>
             </div>
         </section>
@@ -101,6 +67,22 @@
         </div>
         <h2 class="titulo-final">&copy; Brian Rodriguez & Julian Benavides© 2022. All rights reserved</h2>
     </footer>
+    <div id="g_id_onload"
+     data-client_id="28332543331-tekrfvbp0lqkve1femo42dbai5gikk37.apps.googleusercontent.com"
+     data-context="use"
+     data-ux_mode="popup"
+     data-callback="login"
+     data-auto_prompt="false">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="outline"
+     data-text="$ {button.text}"
+     data-size="large"
+     data-logo_alignment="left">
+</div>
 </body>
 
 </html>

@@ -1,106 +1,37 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Prototipo | Principal</title>
-    <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="../css/estilos.css">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800&display=swap" rel="stylesheet"> 
-</head>
-
-<body>
-    <header>
-        <nav>
-            <a href="#">Inicio</a>
-            <a href="#">Contacto</a>
-        </nav>
-        <section class="textos-header">
-            <h1>PROTOTIPO DE HERRAMIENTA PARA LA CREACION Y GESTION DE BITACORAS ACADEMICAS BASADA EN APIS DE GOOGLE</h1>
-            <h2></h2>
-        </section>
-        <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none"
-                style="height: 100%; width: 100%;">
-                <path d="M0.00,49.98 C150.00,150.00 349.20,-50.00 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
-                    style="stroke: none; fill: #fff;"></path>
-            </svg></div>
-    </header>
-    <main>
-        <section class="contenedor sobre-nosotros">
-            <h2 class="titulo">Introduccion</h2>
-            <div class="contenedor-sobre-nosotros">
-                <img src="../imgs/ilustracion2.svg" alt="" class="imagen-about-us">
-                <div class="contenido-textos">
-                    <h3><span>1</span>Resumen</h3>
-                    <p>La siguiente herramienta busca simplificar el proceso de generacion de informes academicos como un material de soporte e historicos de las clases impartidas por un docente.</p>
-                    <h3><span>2</span>Guia rapida</h3>
-                    <p>Por medio de las siguientes opciones se le permitira a un docente, mantener constancia y registro de las clases impartidas y las actividades realizadas junto con la generacion de un documento que lo respalde el cual estara almacenado en su Google drive asociado a su correo institucional.</p>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>GESTIÓN DE BITÁCORAS ACADÉMICAS</h3>
                 </div>
-            </div>
-        </section>
-        <section class="menu">
-            <div class="contenedor">
-                <h2 class="titulo">Menu</h2>
-                <div class="galeria-port">
-                    <div class="imagen-port">
-                        <img src="imgs/facultad.jpg" alt="">
-                        <div class="hover-galeria">
-                            <img src="imgs/facultad-hover.png" alt="" onclick="location.href='facultad.component.html'">
-                            <p>Añadir Facultad</p>
-                        </div>
-                    </div>
-                    <div class="imagen-port">
-                        <img src="imgs/proyecto.jpg" alt="">
-                        <div class="hover-galeria">
-                            <img src="imgs/proyecto-hover.png" alt="" onclick="location.href='proyecto-c.component.html'">
-                            <p>Añadir Proyecto</p>
-                        </div>
-                    </div>
-                    <div class="imagen-port">
-                        <img src="imgs/materia.jpg" alt="">
-                        <div class="hover-galeria">
-                            <img src="imgs/materia-hover.png" alt="" onclick="location.href='materia.component.html'">
-                            <p>Añadir Materia</p>
-                        </div>
-                    </div>
-                    <div class="imagen-port">
-                        <img src="imgs/clase.jpg" alt="">
-                        <div class="hover-galeria">
-                            <img src="imgs/clase-hover.png" alt="" onclick="location.href='clase.component.html'">
-                            <p>Registrar Clase</p>
-                        </div>
-                    </div>
-                    <div class="imagen-port">
-                        <img src="imgs/informe.jpg" alt="">
-                        <div class="hover-galeria">
-                            <img src="imgs/informe-hover.png" alt="" onclick="location.href='bitacora.component.html'">
-                            <p>Generar Bitacora</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-    <footer>
-        <div class="contenedor-footer">
-            <div class="content-foo">
-                <h4>Información</h4>
-                <p>Prototipo herramienta de gestión y creación bitácoras academicas</p>
-                <p>Version 0.0.1</p>
-            </div>
-            <div class="content-foo">
-                <h4>Contacto</h4>
-                <p>Bogotá, Colombia</p>
-                <p>Brian Orlando Rodriguez Velandia</p>
-                <p> +57 300 444 73 47</p>
-                <p>Julian Camilo Benavides Gamboa</p>
-                <p> +57 314 332 86 74</p>
             </div>
         </div>
-        <h2 class="titulo-final">&copy; Brian Rodriguez & Julian Benavides© 2022. All rights reserved</h2>
-    </footer>
-</body>
+    </div>
+    <h3></h3>
+    <button type="button" *ngIf="!isLogin" class="col-lg-4 offset-lg-4" (click)="login()">INICIAR SESIÓN</button>
+    <!-- <app-facultad *ngIf="visibleF"></app-facultad> -->
+    <div *ngIf="isLogin" class="row mt-4">
+        <button type="button" class="col-lg-4 offset-lg-4" routerLink="/registrar_facultad">Crear Facultad</button>
+        <button type="button" class="col-lg-4 offset-lg-4" routerLink="/registrar_proyecto">Crear Proyecto curricular</button>
+        <button type="button" class="col-lg-4 offset-lg-4" routerLink="/registrar_materia">Crear Materia</button>
+        <button type="button" class="col-lg-4 offset-lg-4" routerLink="/registrar_clase">Registrar Clase</button>
+        <button type="button" class="col-lg-4 offset-lg-4" routerLink="/generar_bitacora">Generar Bitácora</button>
+    </div>
+</div>
+<div id="g_id_onload"
+     data-client_id="28332543331-tekrfvbp0lqkve1femo42dbai5gikk37.apps.googleusercontent.com"
+     data-context="use"
+     data-ux_mode="popup"
+     data-callback="login"
+     data-auto_prompt="false">
+</div>
 
-</html>
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="rectangular"
+     data-theme="outline"
+     data-text="$ {button.text}"
+     data-size="large"
+     data-logo_alignment="left">
+</div>

@@ -10,6 +10,7 @@ import { ClaseComponent } from './components/clase/clase.component';
 import { BitacoraComponent } from './components/bitacora/bitacora.component';
 import { FacultadComponent } from './components/facultad/facultad.component';
 import { ProyectoCComponent } from './components/proyecto-c/proyecto-c.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ProyectoCComponent } from './components/proyecto-c/proyecto-c.component
     ClaseComponent,
     BitacoraComponent,
     FacultadComponent,
-    ProyectoCComponent
+    ProyectoCComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
