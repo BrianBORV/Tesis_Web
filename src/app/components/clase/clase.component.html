@@ -6,19 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Prototipo | Registrar Clase</title>
-    <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="shortcut icon" href="./assets/imgs/logo.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800&display=swap" rel="stylesheet"> 
 </head>
 
 <body>
     <header>
-        <nav>
-            <a href="#">Inicio</a>
-            <a href="#">Contacto</a>
-        </nav>
         <section class="textos-header">
-            <h1>PROTOTIPO DE HERRAMIENTA PARA LA CREACION Y GESTION DE BITACORAS ACADEMICAS BASADA EN APIS DE GOOGLE</h1>
+            <h1>PROTOTIPO DE HERRAMIENTA PARA LA CREACIÓN Y GESTIÓN DE BITÁCORAS ACADÉMICAS BASADA EN APIS DE GOOGLE</h1>
             <h2></h2>
         </section>
         <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none"
@@ -31,12 +26,18 @@
         <section class="contenedor sobre-nosotros">
             <h2 class="titulo">Registrar Clase</h2>
             <div class="contenedor-sobre-nosotros">
-                <img src="../../imgs/ilustracion2.svg" alt="" class="imagen-about-us">
+                <img src="./assets/imgs/ilustracion2.svg" alt="" class="imagen-about-us">
                 <div class="contenido-textos">
                     <h3><span>1</span>Resumen</h3>
-                    <p>Por medio de la siguiente pantalla se podran introducir y seleccionar los datos necesarios para realizar el registro de actividades llevadas acabo en una sesion de clase.</p>
-                    <h3><span>2</span>Guia rapida</h3>
-                    <p>Completando los campos especificados a continuacion, los cuales se alimentan de los directorios creados en el drive del docente se genera un registro con las actividades realizadas en clase dejando constancia de lo realizado en la misma.</p>
+                    <p>Por medio de la siguiente pantalla se podran introducir y seleccionar los datos necesarios para realizar el registro de actividades llevadas acabo en una sesion de clase, completando los campos especificados a continuacion, los cuales se alimentan de los directorios creados en el drive del docente.</p>
+                    <h3><span>2</span>Guía rápida</h3>
+                    <p>1. Seleccione la Facultad.<br>
+                       2. Seleccione el Proyecto Curricular.<br>
+                       3. Seleccione la Materia de la cual registrará la clase.<br>
+                       4. Seleccione la fecha y hora de la sesión de clase.<br>
+                       5. Realice una breve descripción de las actividades realizadas durante la sesión de clase<br>
+                       6. Si cuenta con listados, presentaciones, o contenido multimedia que haya utilizado como ayuda para realizar la sesión puede añadir la información correspondiente con los enlaces de acceso en el campo de "Anexos".
+                    </p>
                 </div>
             </div>
         </section>
@@ -51,33 +52,30 @@
                                 <option disabled value="null" selected>--Seleccione Facultad--</option>
                                 <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
                             </select>
-                            <h5 class="titulo-forms">PROYECTO CURRICULAR:</h5>
+                            <h5 class="titulo-forms" style="padding-top: 10px;">PROYECTO CURRICULAR:</h5>
                             <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
                                 <option disabled value="null">--Seleccione Proyecto--</option>
                                 <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">{{filesP[i].name}}</option>
                             </select>
-                            <h5 class="titulo-forms">MATERIA:</h5>
+                            <h5 class="titulo-forms" style="padding-top: 10px;">MATERIA:</h5>
                                 <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdMateria"  [ngModelOptions]="{standalone: true}"  (change)='onSelectM(valM.value)' #valM>
                                     <option disabled value="null">--Seleccione Materia--</option>
                                     <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">{{filesM[i].name}}</option>
                                 </select>
-                            <h5 class="titulo-forms">FECHA    :</h5>
+                            <h5 class="titulo-forms" style="padding-top: 10px;">FECHA    :</h5>
                             <input class="decoration-inputs" style="width: 40%;" formControlName="clase" type="date" id="start" name="trip-start" min="2022-01-01" max="2025-12-31">
-                            <h5 class="titulo-forms">HORARIO:</h5>
+                            <h5 class="titulo-forms" style="padding-top: 10px;">HORARIO:</h5>
                             <div>
-                                <label> Inicio: </label>
+                                <label style="padding-right: 10px;"> Inicio: </label>
                                 <input class="decoration-inputs" formControlName="inicio" type="time" value="06:00 am">
-                                <label> Fin: </label>
+                                <label style="padding-right: 10px; padding-left: 10px;"> Fin: </label>
                                 <input class="decoration-inputs" formControlName="fin" type="time" value='06:00 pm'>
                             </div>
-                            <h5 class="titulo-forms">DESCRIPCIÓN:</h5>
+                            <h5 class="titulo-forms" style="padding-top: 10px;">DESCRIPCIÓN:</h5>
                             <textarea formControlName="texto" name="" id="" rows="10" class="decoration-inputs" style="width: 80%;" ></textarea>
-                            <h5 class="titulo-forms">HERRAMIENTAS:</h5>
+                            <h5 class="titulo-forms" style="padding-top: 10px;">ANEXOS:</h5>
                             <div style="padding-bottom: 10px;">
-                                <textarea name="" id="" rows="5" class="decoration-inputs" style="width: 60%;" ></textarea>
-                                <button class="button4">
-                                    ANEXOS
-                                </button>
+                                <textarea name="" id="" formControlName="anexos" rows="5" class="decoration-inputs" style="width: 60%;" ></textarea>
                             </div>
                             <button class="button4">
                                 REGISTRAR

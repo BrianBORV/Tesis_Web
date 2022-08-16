@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 declare var gapi: any;
 declare var async: any;
@@ -14,7 +15,7 @@ export class FacultadComponent implements OnInit {
   fileMetadata: any;
   form:any;
 
-  constructor(private formBuilder: FormBuilder,) {
+  constructor(private formBuilder: FormBuilder,private router:Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
       facultad:''
     });
@@ -48,7 +49,10 @@ export class FacultadComponent implements OnInit {
                       resource: this.fileMetadata,
                       fields: 'id'
                     }).then((response:any) =>{
-                      console.log('Files:' + response.result.files);
+                      console.log('Facultad creada');
+                      this.zone.run(() => {
+                        this.router.navigate(['/menu']);
+                    });
                     });
                   }
                 }, (err:any) => { console.error("Execute error", err); })

@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnInit, } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnInit, } from '@angular/core';
+import { Router } from '@angular/router';
 import { GapiService } from '../../services/gapiService'
 
 declare var gapi: any;
@@ -15,7 +16,7 @@ export class LoginComponent implements AfterViewInit {
 // If modifying these scopes, delete token.json.
 
   
-  constructor(private gapiServ: GapiService) {
+  constructor(private gapiServ: GapiService,private router:Router, private zone: NgZone) {
     this.isLogin = Boolean(localStorage.getItem("isLogin"));
     console.log(this.isLogin)
     
@@ -52,8 +53,8 @@ export class LoginComponent implements AfterViewInit {
     
   }
 
-  login(){
-    gapi.auth2.getAuthInstance().signIn();
+  async login(){
+    await gapi.auth2.getAuthInstance().signIn();
     this.isLogin=gapi.auth2.getAuthInstance().isSignedIn.get();
     localStorage.setItem("isLogin",String(this.isLogin) );
     console.log(this.isLogin);
@@ -61,18 +62,18 @@ export class LoginComponent implements AfterViewInit {
     this.gapiServ.updateGapi(gapi);
   }
 
-  verificarCarpetaPadre(){
+  async verificarCarpetaPadre(){
     this.fileMetadata = {
       'name': "Bitacoras Academicas",
       'mimeType': 'application/vnd.google-apps.folder'
     };
-    gapi.client.drive.files.list({
+    await gapi.client.drive.files.list({
       "q": "name='Bitacoras Academicas'"
     })
-        .then((response:any) => {
+        .then(async (response:any) => {
                 // Handle the results here (response.result has the parsed body).
                 if (response.result.files.length == 0){
-                  gapi.client.drive.files.create({
+                  await gapi.client.drive.files.create({
                     resource: this.fileMetadata,
                     fields: 'id'
                   }).then((response:any) =>{
@@ -82,6 +83,11 @@ export class LoginComponent implements AfterViewInit {
                   localStorage.setItem("IdBitacora",response.result.files[0].id);
                   console.log(response.result.files[0].id)
                 }
+                console.log("Redirigiendo")
+                this.zone.run(() => {
+                  this.router.navigate(['/menu']);
+                });
+
               }, (err:any) => { console.error("Execute error", err); })
   }
 

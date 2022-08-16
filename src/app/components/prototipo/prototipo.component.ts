@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, } from '@angular/core';
+import { AfterViewInit, Component, NgZone, } from '@angular/core';
+import { Router } from '@angular/router';
 import { GapiService } from '../../services/gapiService'
 
 
@@ -15,7 +16,7 @@ export class PrototipoComponent implements AfterViewInit  {
 // If modifying these scopes, delete token.json.
 
   
-  constructor(private gapiServ: GapiService) {
+  constructor(private gapiServ: GapiService, private router:Router, private zone: NgZone) {
     this.isLogin = Boolean(localStorage.getItem("isLogin"));
     console.log(this.isLogin)
     
@@ -108,6 +109,20 @@ export class PrototipoComponent implements AfterViewInit  {
     this.verificarCarpetaPadre();
     console.log(gapi.client.docs.documents);
     console.log(gapi.client.drive.files.create);
+  }
+
+  async logOut(){
+    await gapi.auth2.getAuthInstance().signOut();
+    localStorage.removeItem('isLogin');
+    localStorage.removeItem('IdBitacora');
+    console.log(this.isLogin);
+    this.gapiServ.updateGapi(gapi);
+    console.log(localStorage);
+
+    this.zone.run(() => {
+      this.router.navigate(['/index']);
+  });
+
   }
 
 }

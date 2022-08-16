@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder} from '@angular/forms';
+import { Router } from '@angular/router';
 
 declare var gapi: any;
 
@@ -22,7 +23,7 @@ export class ClaseComponent implements OnInit {
   IdMateria : any = null;
   IdClase: any = null;
 
-  constructor(private formBuilder: FormBuilder,) {
+  constructor(private formBuilder: FormBuilder, private router:Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
       materia:'',
       clase:'',
@@ -79,9 +80,10 @@ export class ClaseComponent implements OnInit {
     let fin = this.form.get("fin")?.value;
     let texto = this.form.get("texto")?.value;
     let anexos = this.form.get("anexos")?.value;
-    let request:  any[] = [];
+    let requestTabla:  any[] = [];
+    let requestTextoT: any[] = [];
   
-    request = [
+    requestTabla = [
       {
         "insertTable": {
           "rows": 6,
@@ -186,103 +188,7 @@ export class ClaseComponent implements OnInit {
             "columnSpan": 5
           }
         }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 5
-          },
-          "text": "Asignatura:"
-        }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 18
-          },
-          "text": "{{MATERIA}}"
-        }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 33
-          },
-          "text": "Grupo:"
-        }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 41
-          },
-          "text": "{{Grupo}}"
-        }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 53
-          },
-          "text": "Fecha Sesión:"
-        }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 68
-          },
-          "text": "{{FECHA}}"
-        }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 79
-          },
-          "text": "Horario:"
-        }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 89
-          },
-          "text": "{{HORARIO}}"
-        }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 105
-          },
-          "text": "DESCRIPCIÓN DE LA UNIDAD Y ACTIVIDADES"
-        }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 162
-          },
-          "text": "{{TEXTO}}"
-        }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 174
-          },
-          "text": "HERRAMIENTA"
-        }
-      },
-      {
-        "insertText": {
-          "location": {
-            "index": 197
-          },
-          "text": "{{ANEXOS}}"
-        }
-      }
+      }      
  ]
   let nombreMateria:any;
   let grupo:any;
@@ -354,27 +260,137 @@ export class ClaseComponent implements OnInit {
                   gapi.client.drive.files.create({
                     resource: this.fileMetadata,
                     fields: 'id'
-                  }).then((response:any) =>{
+                  }).then(async (response:any) =>{
                     console.log(response.result.id);
                     this.IdClase=response.result.id;
-                    gapi.client.docs.documents.batchUpdate({
+                    await gapi.client.docs.documents.batchUpdate({
                       "documentId": response.result.id, 
                       "resource": {
-                        "requests": request
+                        "requests": requestTabla
                       }
-                    }).then((response2:any) => {
-                      // Handle the results here (response.result has the parsed body).
-                      console.log("Response", response2);
-                      gapi.client.docs.documents.batchUpdate({
-                        "documentId": response2.result.documentId,
+                    })
+                    await gapi.client.docs.documents.get({
+                      "documentId": this.IdClase
+                    })
+                      .then(async (response4:any)=>{
+                        var body=response4.result.body;
+                        console.log(body)
+                        requestTextoT=[
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 5
+                              },
+                              "text": "Asignatura:"
+                            }
+                          },
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 18
+                              },
+                              "text": "{{MATERIA}}"
+                            }
+                          },
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 33
+                              },
+                              "text": "Grupo:"
+                            }
+                          },
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 41
+                              },
+                              "text": "{{Grupo}}"
+                            }
+                          },
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 53
+                              },
+                              "text": "Fecha Sesión:"
+                            }
+                          },
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 68
+                              },
+                              "text": "{{FECHA}}"
+                            }
+                          },
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 79
+                              },
+                              "text": "Horario:"
+                            }
+                          },
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 89
+                              },
+                              "text": "{{HORARIO}}"
+                            }
+                          },
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 105
+                              },
+                              "text": "DESCRIPCIÓN DE LA UNIDAD Y ACTIVIDADES"
+                            }
+                          },
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 162
+                              },
+                              "text": "{{TEXTO}}"
+                            }
+                          },
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 174
+                              },
+                              "text": "HERRAMIENTA"
+                            }
+                          },
+                          {
+                            "insertText": {
+                              "location": {
+                                "index": 196
+                              },
+                              "text": "{{ANEXOS}}"
+                            }
+                          }
+                       ]
+                       await gapi.client.docs.documents.batchUpdate({
+                        "documentId": this.IdClase,
+                        "resource": {
+                          "requests": requestTextoT
+                        } 
+                      }).then((response4:any)=>{console.log("base añadida")})
+                      })
+                      await gapi.client.docs.documents.batchUpdate({
+                        "documentId": this.IdClase,
                         "resource": {
                           "requests": request2
                         } 
-                      }).then((response3:any)=>{
-                        console.log(response3);
-                        this.estiloClase();
                       })
-                    })
+                    this.estiloClase();
+                    this.zone.run(() => {
+                      this.router.navigate(['/menu']);
+                  });
+                    
                   });
                 }
               }, (err:any) => { console.error("Execute error", err); })
@@ -748,6 +764,20 @@ export class ClaseComponent implements OnInit {
             "updateTextStyle": {
               "fields": "*",
               "textStyle": {
+                "weightedFontFamily": {
+                  "fontFamily": "Calibri"
+                }
+              },
+              "range": {
+                "startIndex": body.content[2].startIndex,
+                "endIndex": body.content[3].endIndex
+              }
+            }
+          },
+          {
+            "updateTextStyle": {
+              "fields": "bold",
+              "textStyle": {
                 "bold": true
                 
               },
@@ -761,7 +791,7 @@ export class ClaseComponent implements OnInit {
           },
           {
             "updateTextStyle": {
-              "fields": "*",
+              "fields": "bold",
               "textStyle": {
                 "bold": true
                 
@@ -776,7 +806,7 @@ export class ClaseComponent implements OnInit {
           },
           {
             "updateTextStyle": {
-              "fields": "*",
+              "fields": "bold",
               "textStyle": {
                 "bold": true
                 
@@ -791,7 +821,7 @@ export class ClaseComponent implements OnInit {
           },
           {
             "updateTextStyle": {
-              "fields": "*",
+              "fields": "bold",
               "textStyle": {
                 "bold": true
                 
@@ -806,7 +836,7 @@ export class ClaseComponent implements OnInit {
           },
           {
             "updateTextStyle": {
-              "fields": "*",
+              "fields": "bold",
               "textStyle": {
                 "bold": true
                 
@@ -821,7 +851,7 @@ export class ClaseComponent implements OnInit {
           },
           {
             "updateTextStyle": {
-              "fields": "*",
+              "fields": "bold",
               "textStyle": {
                 "bold": true
                 
@@ -833,20 +863,6 @@ export class ClaseComponent implements OnInit {
               }
             }
             
-          },
-          {
-            "updateTextStyle": {
-              "fields": "*",
-              "textStyle": {
-                "weightedFontFamily": {
-                  "fontFamily": "Calibri"
-                }
-              },
-              "range": {
-                "startIndex": body.content[2].startIndex,
-                "endIndex": body.content[3].endIndex
-              }
-            }
           }
         ]
         await gapi.client.docs.documents.batchUpdate({

@@ -6,19 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Prototipo | Principal</title>
-    <link rel="shortcut icon" href="imgs/logo.png" type="image/x-icon">
-    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="shortcut icon" href="./assets/imgs/logo.png" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800&display=swap" rel="stylesheet"> 
 </head>
 
 <body>
     <header>
-        <nav>
-            <a href="#">Inicio</a>
-            <a href="#">Contacto</a>
-        </nav>
         <section class="textos-header">
-            <h1>PROTOTIPO DE HERRAMIENTA PARA LA CREACION Y GESTION DE BITACORAS ACADEMICAS BASADA EN APIS DE GOOGLE</h1>
+            <h1>PROTOTIPO DE HERRAMIENTA PARA LA CREACIÓN Y GESTIÓN DE BITÁCORAS ACADÉMICAS BASADA EN APIS DE GOOGLE</h1>
             <h2></h2>
         </section>
         <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none"
@@ -29,56 +24,61 @@
     </header>
     <main>
         <section class="contenedor sobre-nosotros">
-            <h2 class="titulo">Introduccion</h2>
+            <h2 class="titulo">Menú</h2>
             <div class="contenedor-sobre-nosotros">
-                <img src="../imgs/ilustracion2.svg" alt="" class="imagen-about-us">
+                <img src="./assets/imgs/ilustracion2.svg" alt="" class="imagen-about-us">
                 <div class="contenido-textos">
                     <h3><span>1</span>Resumen</h3>
                     <p>La siguiente herramienta busca simplificar el proceso de generacion de informes academicos como un material de soporte e historicos de las clases impartidas por un docente.</p>
-                    <h3><span>2</span>Guia rapida</h3>
+                    <h3><span>2</span>Guía rápida</h3>
                     <p>Por medio de las siguientes opciones se le permitira a un docente, mantener constancia y registro de las clases impartidas y las actividades realizadas junto con la generacion de un documento que lo respalde el cual estara almacenado en su Google drive asociado a su correo institucional.</p>
                 </div>
             </div>
         </section>
         <section class="menu">
             <div class="contenedor">
-                <h2 class="titulo">Menu</h2>
+                <h2 class="titulo">Menú</h2>
                 <div class="galeria-port">
                     <div class="imagen-port">
-                        <img src="imgs/facultad.jpg" alt="">
+                        <img src="./assets/imgs/facultad.jpg" alt="">
                         <div class="hover-galeria">
-                            <img src="imgs/facultad-hover.png" alt="" onclick="location.href='facultad.component.html'">
+                            <img src="./assets/imgs/facultad-hover.png" alt="" routerLink="/registrar_facultad">
                             <p>Añadir Facultad</p>
                         </div>
                     </div>
                     <div class="imagen-port">
-                        <img src="imgs/proyecto.jpg" alt="">
+                        <img src="./assets/imgs/proyecto.jpg" alt="">
                         <div class="hover-galeria">
-                            <img src="imgs/proyecto-hover.png" alt="" onclick="location.href='proyecto-c.component.html'">
+                            <img src="./assets/imgs/proyecto-hover.png" alt="" routerLink="/registrar_proyecto">
                             <p>Añadir Proyecto</p>
                         </div>
                     </div>
                     <div class="imagen-port">
-                        <img src="imgs/materia.jpg" alt="">
+                        <img src="./assets/imgs/materia.jpg" alt="">
                         <div class="hover-galeria">
-                            <img src="imgs/materia-hover.png" alt="" onclick="location.href='materia.component.html'">
+                            <img src="./assets/imgs/materia-hover.png" alt="" routerLink="/registrar_materia">
                             <p>Añadir Materia</p>
                         </div>
                     </div>
                     <div class="imagen-port">
-                        <img src="imgs/clase.jpg" alt="">
+                        <img src="./assets/imgs/clase.jpg" alt="">
                         <div class="hover-galeria">
-                            <img src="imgs/clase-hover.png" alt="" onclick="location.href='clase.component.html'">
+                            <img src="./assets/imgs/clase-hover.png" alt="" routerLink="/registrar_clase">
                             <p>Registrar Clase</p>
                         </div>
                     </div>
                     <div class="imagen-port">
-                        <img src="imgs/informe.jpg" alt="">
+                        <img src="./assets/imgs/informe.jpg" alt="">
                         <div class="hover-galeria">
-                            <img src="imgs/informe-hover.png" alt="" onclick="location.href='bitacora.component.html'">
-                            <p>Generar Bitacora</p>
+                            <img src="./assets/imgs/informe-hover.png" alt="" routerLink="/generar_bitacora">
+                            <p>Generar Bitácora</p>
                         </div>
                     </div>
+                </div>
+                <div class="centrar-general">
+                    <button class="button4" (click)="logOut()">
+                        Cerrar Sesión
+                    </button>
                 </div>
             </div>
         </section>

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 declare var gapi: any;
 
@@ -15,10 +16,12 @@ export class ProyectoCComponent implements OnInit {
   form:any;
   IdFacultad : any=null;
 
-  constructor(private formBuilder: FormBuilder,) {
+  constructor(private formBuilder: FormBuilder,private router:Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
       proyecto:''
     });
+
+    this.ngOnInit();
     
    }
 
@@ -49,6 +52,9 @@ export class ProyectoCComponent implements OnInit {
                     fields: 'id'
                   }).then((response:any) =>{
                     console.log('Files:' + response.result.files);
+                    this.zone.run(() => {
+                      this.router.navigate(['/menu']);
+                  });
                   });
                 }
               }, (err:any) => { console.error("Execute error", err); })

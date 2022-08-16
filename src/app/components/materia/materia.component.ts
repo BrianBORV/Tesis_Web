@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder} from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -19,11 +19,12 @@ export class MateriaComponent implements OnInit {
   IdFacultad : any=null;
   IdProyecto :any=null;
 
-  constructor(private formBuilder: FormBuilder,private router:Router) {
+  constructor(private formBuilder: FormBuilder,private router:Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
       materia:'',
       grupo: ''
     });
+    console.log(this.zone);
     
     
    }
@@ -63,7 +64,9 @@ export class MateriaComponent implements OnInit {
                     fields: 'id'
                   }).then((response:any) =>{
                     console.log(response);
-                    this.router.navigate(['/index'])
+                    this.zone.run(() => {
+                      this.router.navigate(['/menu']);
+                  });
                   });
                 }
               }, (err:any) => { console.error("Execute error", err); })
