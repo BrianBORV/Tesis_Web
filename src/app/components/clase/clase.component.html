@@ -11,18 +11,56 @@
 </head>
 
 <body>
-    <header>
-        <section class="textos-header">
-            <h1>PROTOTIPO DE HERRAMIENTA PARA LA CREACIÓN Y GESTIÓN DE BITÁCORAS ACADÉMICAS BASADA EN APIS DE GOOGLE</h1>
-            <h2></h2>
-        </section>
-        <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none"
-                style="height: 100%; width: 100%;">
-                <path d="M0.00,49.98 C150.00,150.00 349.20,-50.00 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
-                    style="stroke: none; fill: #fff;"></path>
-            </svg></div>
-    </header>
     <main>
+        <section class="menu">
+            <div class="contenedor">
+                <h2 class="titulo" style="margin-bottom: 20px;">Registrar Clase</h2>
+                <div style="text-align: center; margin-bottom: 20px;">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" style="border-radius: 20px; opacity: 70%; cursor: alias; font-size: 18px; text-decoration: underline; border-color: black;" data-toggle="modal"  data-target=".bd-example-modal-lg">Información</button>            
+                </div>
+                <div class="formulario">
+                    <form [formGroup]="form" (ngSubmit)="registrarClase()">
+                        <div class="card-body" style="text-align: center;">
+                            <h5 class="titulo-forms">FACULTAD</h5>
+                            <select class="decoration-inputs" style="width: 80%;" (change)='onSelect(val.value)' #val>
+                                <option disabled value="null" selected>--Seleccione Facultad--</option>
+                                <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
+                            </select>
+                            <h5 class="titulo-forms" style="padding-top: 10px;">PROYECTO CURRICULAR</h5>
+                            <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
+                                <option disabled value="null">--Seleccione Proyecto--</option>
+                                <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">{{filesP[i].name}}</option>
+                            </select>
+                            <h5 class="titulo-forms" style="padding-top: 10px;">ASIGNATURA</h5>
+                                <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdMateria"  [ngModelOptions]="{standalone: true}"  (change)='onSelectM(valM.value)' #valM>
+                                    <option disabled value="null">--Seleccione Asignatura--</option>
+                                    <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">{{filesM[i].name}}</option>
+                                </select>
+                            <h5 class="titulo-forms" style="padding-top: 10px;">FECHA    </h5>
+                            <input class="decoration-inputs" style="width: 40%;" formControlName="clase" type="date" id="start" name="trip-start" min="2022-01-01" max="2025-12-31">
+                            <h5 class="titulo-forms" style="padding-top: 10px;">HORARIO</h5>
+                            <div>
+                                <label style="padding-right: 10px;"> Inicio </label>
+                                <input class="decoration-inputs" formControlName="inicio" type="time" value="06:00 am">
+                                <label style="padding-right: 10px; padding-left: 10px;"> Fin </label>
+                                <input class="decoration-inputs" formControlName="fin" type="time" value='06:00 pm'>
+                            </div>
+                            <h5 class="titulo-forms" style="padding-top: 10px;">DESCRIPCIÓN</h5>
+                            <textarea formControlName="texto" name="" id="" rows="10" class="decoration-inputs" style="width: 80%;"></textarea>
+                            <h5 class="titulo-forms" style="padding-top: 10px;">ANEXOS</h5>
+                            
+                               
+  
+  <!-- Modal -->
+  <script type="text/javascript">
+    $( function(){
+        $('#Mymodal').modal('show');
+    } )
+</script>
+  <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
         <section class="contenedor sobre-nosotros">
             <h2 class="titulo">Registrar Clase</h2>
             <div class="contenedor-sobre-nosotros">
@@ -41,69 +79,60 @@
                 </div>
             </div>
         </section>
-        <section class="menu">
-            <div class="contenedor">
-                <h2 class="titulo">Registrar Clase</h2>            
-                <div class="formulario">
-                    <form [formGroup]="form" (ngSubmit)="registrarClase()">
-                        <div style="text-align: center;">
-                            <h5 class="titulo-forms">FACULTAD:</h5>
-                            <select class="decoration-inputs" style="width: 80%;" (change)='onSelect(val.value)' #val>
-                                <option disabled value="null" selected>--Seleccione Facultad--</option>
-                                <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
-                            </select>
-                            <h5 class="titulo-forms" style="padding-top: 10px;">PROYECTO CURRICULAR:</h5>
-                            <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
-                                <option disabled value="null">--Seleccione Proyecto--</option>
-                                <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">{{filesP[i].name}}</option>
-                            </select>
-                            <h5 class="titulo-forms" style="padding-top: 10px;">MATERIA:</h5>
-                                <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdMateria"  [ngModelOptions]="{standalone: true}"  (change)='onSelectM(valM.value)' #valM>
-                                    <option disabled value="null">--Seleccione Materia--</option>
-                                    <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">{{filesM[i].name}}</option>
-                                </select>
-                            <h5 class="titulo-forms" style="padding-top: 10px;">FECHA    :</h5>
-                            <input class="decoration-inputs" style="width: 40%;" formControlName="clase" type="date" id="start" name="trip-start" min="2022-01-01" max="2025-12-31">
-                            <h5 class="titulo-forms" style="padding-top: 10px;">HORARIO:</h5>
-                            <div>
-                                <label style="padding-right: 10px;"> Inicio: </label>
-                                <input class="decoration-inputs" formControlName="inicio" type="time" value="06:00 am">
-                                <label style="padding-right: 10px; padding-left: 10px;"> Fin: </label>
-                                <input class="decoration-inputs" formControlName="fin" type="time" value='06:00 pm'>
-                            </div>
-                            <h5 class="titulo-forms" style="padding-top: 10px;">DESCRIPCIÓN:</h5>
-                            <textarea formControlName="texto" name="" id="" rows="10" class="decoration-inputs" style="width: 80%;" ></textarea>
-                            <h5 class="titulo-forms" style="padding-top: 10px;">ANEXOS:</h5>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+          </div>
+      </div>
+    </div>
+  </div>
+                                
                             <div style="padding-bottom: 10px;">
-                                <textarea name="" id="" formControlName="anexos" rows="5" class="decoration-inputs" style="width: 60%;" ></textarea>
+                                <textarea name="" id="" formControlName="anexos" rows="5" class="decoration-inputs" style="width: 60%; " readonly="true" ></textarea>
                             </div>
-                            <button class="button4">
-                                REGISTRAR
+                            <div><button type="button" class="button4" data-toggle="modal" data-target="#exampleModalCenter" (click)="buscarAnexos()" style="margin-bottom: 20px; border-radius: 30px; margin-right: 10px;">
+                                Agregar Enlace
+                              </button>
+                              <button type="button" class="button4"  (click)="limpiarAnexos()" style="margin-bottom: 20px; border-radius: 30px;">
+                                Limpiar Anexos
+                              </button></div>
+                            <button class="button4" style=" border-color: black;">
+                                REGISTRAR CLASE
                             </button>
                         </div>
+                        <!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">ANEXOS</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div>
+            <div style="padding-bottom: 10px;">
+                <div class="titulo-forms">Nombre</div>
+                <input type="text" class="decoration-inputs" formControlName="nombreAnexo">
+                <select class="decoration-inputs" style="width: 60%;" [(ngModel)] = "anexos"  [ngModelOptions]="{standalone: true}"  (change)='onSelectA(valA.value)' #valA>
+                    <option disabled value="null">--Seleccione Recurso--</option>
+                    <option *ngFor="let file of filesA; let i= index" [value]="filesA[i].id">{{filesA[i].name}}</option>
+                </select>
+            </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="agregarAnexo()">Agregar</button>
+        </div>
+      </div>
+    </div>
+  </div>
                     </form>
                 </div> 
             </div>
         </section>
+        
     </main>
-    <footer>
-        <div class="contenedor-footer">
-            <div class="content-foo">
-                <h4>Información</h4>
-                <p>Prototipo herramienta de gestión y creación bitácoras academicas</p>
-                <p>Version 0.0.1</p>
-            </div>
-            <div class="content-foo">
-                <h4>Contacto</h4>
-                <p>Bogotá, Colombia</p>
-                <p>Brian Orlando Rodriguez Velandia</p>
-                <p> +57 300 444 73 47</p>
-                <p>Julian Camilo Benavides Gamboa</p>
-                <p> +57 314 332 86 74</p>
-            </div>
-        </div>
-        <h6 class="titulo-final">&copy; Brian Rodriguez & Julian Benavides© 2022. All rights reserved</h6>
-    </footer>
 </body>
 
 </html>

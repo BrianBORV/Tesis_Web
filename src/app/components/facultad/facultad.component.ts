@@ -1,6 +1,7 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 declare var gapi: any;
 declare var async: any;
@@ -13,51 +14,75 @@ declare var pageToken: null;
 })
 export class FacultadComponent implements OnInit {
   fileMetadata: any;
-  form:any;
+  form: any;
+  facultad:any;
 
-  constructor(private formBuilder: FormBuilder,private router:Router, private zone: NgZone) {
+  constructor(private formBuilder: FormBuilder, private router: Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
-      facultad:''
+      facultad: ''
     });
   }
 
   ngOnInit(): void {
   }
 
-  creaCarpeta(){
+  creaCarpeta() {
     let facultad = this.form.get("facultad")?.value;
-    let padre:any;
+    if (facultad==null || facultad=="") {
+      Swal.fire({
+        title: 'Error',
+        text: 'Debe digitar el nombre de una facultad',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      })
+    } else {
+      let padre: any;
     gapi.client.drive.files.list({
       "q": "name='Bitacoras Academicas'"
-    }).then((response:any) => {
-      // Handle the results here (response.result has the parsed body).
-      console.log("Bitacora?", response.result.files[0].id);
-      padre=response.result.files[0].id;
+    }).then((response: any) => {
+      padre = response.result.files[0].id;
       this.fileMetadata = {
-        'name': "Facultad de "+facultad,
+        'name': facultad,
         'mimeType': 'application/vnd.google-apps.folder',
         'parents': [padre]
       };
       gapi.client.drive.files.list({
-        "q": "name='"+facultad+"' and '"+padre+"' in parents"
+        "q": "name='" + facultad + "' and '" + padre + "' in parents"
       })
-          .then((response:any) => {
-                  // Handle the results here (response.result has the parsed body).
-                  console.log("Response", response);
-                  if (response.result.files.length == 0){
-                    gapi.client.drive.files.create({
-                      resource: this.fileMetadata,
-                      fields: 'id'
-                    }).then((response:any) =>{
-                      console.log('Facultad creada');
-                      this.zone.run(() => {
-                        this.router.navigate(['/menu']);
-                    });
-                    });
-                  }
-                }, (err:any) => { console.error("Execute error", err); })
-    }, (err:any) => { console.error("Execute error", err); })
+        .then((response: any) => {
+          if (response.result.files.length == 0) {
+            gapi.client.drive.files.create({
+              resource: this.fileMetadata,
+              fields: 'id'
+            }).then((response: any) => {
+              Swal.fire({
+                title: 'Facultad Creada',
+                text: 'Facultad creada correctamente',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+              }).then((result) => {
+                this.zone.run(() => {
+                  this.router.navigate(['/menu']);
+                });
+              })
+
+            });
+          }else{
+            if (response.result.files[0].name==facultad) {
+              Swal.fire({
+                title: 'Advertencia',
+                text: 'La facultad ya existe',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+              })
+              
+            }
+          }
+        }, (err: any) => { console.error("Execute error", err); })
+    }, (err: any) => { console.error("Execute error", err); })
+    }
     
+
   }
 
 }

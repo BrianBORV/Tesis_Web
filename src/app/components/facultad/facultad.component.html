@@ -1,28 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Prototipo | Registrar Facultad</title>
-    <link rel="shortcut icon" href="./assets/imgs/logo.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800&display=swap" rel="stylesheet"> 
-</head>
-
 <body>
-    <header>
-        <section class="textos-header">
-            <h1>PROTOTIPO DE HERRAMIENTA PARA LA CREACIÓN Y GESTIÓN DE BITÁCORAS ACADÉMICAS BASADA EN APIS DE GOOGLE</h1>
-            <h2></h2>
-        </section>
-        <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none"
-                style="height: 100%; width: 100%;">
-                <path d="M0.00,49.98 C150.00,150.00 349.20,-50.00 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
-                    style="stroke: none; fill: #fff;"></path>
-            </svg></div>
-    </header>
     <main>
+        <section class="menu">
+            <div class="contenedor">
+                <h2 class="titulo" style="margin-bottom: 20px;">Registrar Facultad</h2>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" style="border-radius: 20px; opacity: 70%; cursor: alias; font-size: 18px; text-decoration: underline; border-color: black;" data-toggle="modal"  data-target=".bd-example-modal-lg">Información</button>            
+                    </div>            
+                <div class="formulario">
+                    <form [formGroup]="form" (ngSubmit)="creaCarpeta()">
+                        <div style="text-align: center;" class="card-body">
+                            <h5 class="titulo-forms">NOMBRE DE LA FACULTAD</h5>
+                            <input style="width: 80%;" formControlName="facultad" type="text" class="decoration-inputs" name="" id="">
+                            <h6 style="padding-top: 10px; padding-bottom: 10px;">Por favor digite COMPLETAMENTE el nombre de la facultad. Ej: Facultad de Artes</h6>
+                            <button class="button4" style=" border-color: black;">
+                                SIGUIENTE
+                            </button>
+                        </div>
+                    </form>
+                </div> 
+            </div>
+        </section>
+        <!-- Modal -->
+  <script type="text/javascript">
+    $( function(){
+        $('#Mymodal').modal('show');
+    } )
+</script>
+  <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
         <section class="contenedor sobre-nosotros">
             <h2 class="titulo">Registrar Facultad</h2>
             <div class="contenedor-sobre-nosotros">
@@ -32,46 +42,17 @@
                     <p>Por medio de la siguiente pantalla es posible realizar el registro de una facultad del ente educativo.</p>
                     <h3><span>2</span>Guía rápida</h3>
                     <p>Permite crear un directorio con el nombre asignado en la raíz del drive del docente donde a futuro se crearán directorios correspondientes a proyectos curriculares, grupos y sesiones de clase.
-                        (La carpeta originada tendrá como nombre "Facultad de [String Ingresado]")</p>
+                        (La carpeta originada tendrá como nombre "Facultad de [Texto Ingresado]")</p>
                 </div>
             </div>
         </section>
-        <section class="menu">
-            <div class="contenedor">
-                <h2 class="titulo">Registrar Facultad</h2>            
-                <div class="formulario">
-                    <form [formGroup]="form" (ngSubmit)="creaCarpeta()">
-                        <div style="text-align: center;">
-                            <h5 class="titulo-forms">NOMBRE DE LA FACULTAD:</h5>
-                            <input style="width: 80%;" formControlName="facultad" type="text" class="decoration-inputs" name="" id="">
-                            <h6 style="padding-top: 10px; padding-bottom: 10px;">Por favor digite EXCLUSIVAMENTE el nombre de la facultad. Ej: Artes</h6>
-                            <button class="button4">
-                                SIGUIENTE
-                            </button>
-                        </div>
-                    </form>
-                </div> 
-            </div>
-        </section>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+          </div>
+      </div>
+    </div>
+  </div>
     </main>
-    <footer>
-        <div class="contenedor-footer">
-            <div class="content-foo">
-                <h4>Información</h4>
-                <p>Prototipo herramienta de gestión y creación bitácoras academicas</p>
-                <p>Version 0.0.1</p>
-            </div>
-            <div class="content-foo">
-                <h4>Contacto</h4>
-                <p>Bogotá, Colombia</p>
-                <p>Brian Orlando Rodriguez Velandia</p>
-                <p> +57 300 444 73 47</p>
-                <p>Julian Camilo Benavides Gamboa</p>
-                <p> +57 314 332 86 74</p>
-            </div>
-        </div>
-        <h6 class="titulo-final">&copy; Brian Rodriguez & Julian Benavides© 2022. All rights reserved</h6>
-    </footer>
-</body>
+   </body>
 
 </html>

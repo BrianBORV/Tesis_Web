@@ -11,18 +11,62 @@
 </head>
 
 <body>
-    <header>
-        <section class="textos-header">
-            <h1>PROTOTIPO DE HERRAMIENTA PARA LA CREACIÓN Y GESTIÓN DE BITÁCORAS ACADÉMICAS BASADA EN APIS DE GOOGLE</h1>
-            <h2></h2>
-        </section>
-        <div class="wave" style="height: 150px; overflow: hidden;"><svg viewBox="0 0 500 150" preserveAspectRatio="none"
-                style="height: 100%; width: 100%;">
-                <path d="M0.00,49.98 C150.00,150.00 349.20,-50.00 500.00,49.98 L500.00,150.00 L0.00,150.00 Z"
-                    style="stroke: none; fill: #fff;"></path>
-            </svg></div>
-    </header>
     <main>
+        <section class="menu">
+            <div class="contenedor">
+                <h2 class="titulo" style="margin-bottom: 20px;">Generar Bitacora</h2>  
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" style="border-radius: 20px; opacity: 70%; cursor: alias; font-size: 18px; text-decoration: underline; border-color: black;" data-toggle="modal"  data-target=".bd-example-modal-lg">Información</button>            
+                    </div>          
+                <div class="formulario">
+                    <div style="text-align: center;" class="card-body">
+                    <form [formGroup]="form" (ngSubmit)="generarBitacora()">
+                        <h5 class="titulo-forms">NOMBRE COMPLETO</h5>
+                        <input class="decoration-inputs" style="width: 80%;" type="text" name="" id="" formControlName="nombre">
+                        <h5 class="titulo-forms">PERIODO DE INFORME</h5>
+                        <input class="decoration-inputs" style="width: 80%;" type="text" name="" id="" formControlName="periodo">
+                        <h5></h5>
+                        <div>
+                            <h5 class="titulo-forms"> Inicio del Periodo </h5>
+                            <input class="decoration-inputs" style="width: 80%;" formControlName="inicio" type="date" id="start" name="trip-start"  min="2022-01-01" max="2025-12-31">
+                            <h5 class="titulo-forms"> Fin del Periodo </h5>
+                            <input class="decoration-inputs" style="width: 80%;" formControlName="fin" type="date" id="start" name="trip-start" min="2022-01-01" max="2025-12-31">
+                        </div>
+                        <h5 class="titulo-forms">FACULTAD</h5>
+                        <select class="decoration-inputs" style="width: 80%;" (change)='onSelect(val.value)' #val>
+                            <option disabled value="null" selected>--Seleccione Facultad--</option>
+                            <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
+                        </select>
+                        <h5 class="titulo-forms">PROYECTO CURRICULAR</h5>
+                        <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
+                            <option disabled value="null">--Seleccione Proyecto--</option>
+                            <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">{{filesP[i].name}}</option>
+                        </select>
+                        <div>
+                            <h5 class="titulo-forms">ASIGNATURA</h5>
+                            <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdMateria"  [ngModelOptions]="{standalone: true}"  (change)='onSelectM(valM.value)' #valM>
+                                <option disabled value="null">--Seleccione Asignatura--</option>
+                                <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">{{filesM[i].name}}</option>
+                            </select>
+                        </div>
+                        <div class="centrar-general">
+                            <button class="button4" style=" border-color: black;">GENERAR BITACORA</button> 
+                        </div>          
+                    </form>
+                    </div>
+                </div> 
+            </div>
+        </section>
+        <!-- Modal -->
+  <script type="text/javascript">
+    $( function(){
+        $('#Mymodal').modal('show');
+    } )
+</script>
+  <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
         <section class="contenedor sobre-nosotros">
             <h2 class="titulo">Bitácora</h2>
             <div class="contenedor-sobre-nosotros">
@@ -41,67 +85,13 @@
                 </div>
             </div>
         </section>
-        <section class="menu">
-            <div class="contenedor">
-                <h2 class="titulo">Generar Bitacora</h2>            
-                <div class="formulario">
-                    <div style="text-align: center;">
-                    <form [formGroup]="form" (ngSubmit)="generarBitacora()">
-                        <h5 class="titulo-forms">NOMBRE COMPLETO:</h5>
-                        <input class="decoration-inputs" style="width: 80%;" type="text" name="" id="" formControlName="nombre">
-                        <h5 class="titulo-forms">PERIODO DE INFORME:</h5>
-                        <input class="decoration-inputs" style="width: 80%;" type="text" name="" id="" formControlName="periodo">
-                        <h5></h5>
-                        <div>
-                            <h5 class="titulo-forms"> Inicio del Periodo: </h5>
-                            <input class="decoration-inputs" style="width: 80%;" formControlName="inicio" type="date" id="start" name="trip-start"  min="2022-01-01" max="2025-12-31">
-                            <h5 class="titulo-forms"> Fin del Periodo: </h5>
-                            <input class="decoration-inputs" style="width: 80%;" formControlName="fin" type="date" id="start" name="trip-start" min="2022-01-01" max="2025-12-31">
-                        </div>
-                        <h5 class="titulo-forms">FACULTAD:</h5>
-                        <select class="decoration-inputs" style="width: 80%;" (change)='onSelect(val.value)' #val>
-                            <option disabled value="null" selected>--Seleccione Facultad--</option>
-                            <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
-                        </select>
-                        <h5 class="titulo-forms">PROYECTO CURRICULAR:</h5>
-                        <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
-                            <option disabled value="null">--Seleccione Proyecto--</option>
-                            <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">{{filesP[i].name}}</option>
-                        </select>
-                        <div>
-                            <h5 class="titulo-forms">MATERIA:</h5>
-                            <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdMateria"  [ngModelOptions]="{standalone: true}"  (change)='onSelectM(valM.value)' #valM>
-                                <option disabled value="null">--Seleccione Materia--</option>
-                                <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">{{filesM[i].name}}</option>
-                            </select>
-                        </div>
-                        <div class="centrar-general">
-                            <button class="button4">GENERAR</button> 
-                        </div>          
-                    </form>
-                    </div>
-                </div> 
-            </div>
-        </section>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+          </div>
+      </div>
+    </div>
+  </div>
     </main>
-    <footer>
-        <div class="contenedor-footer">
-            <div class="content-foo">
-                <h4>Información</h4>
-                <p>Prototipo herramienta de gestión y creación bitácoras academicas</p>
-                <p>Version 0.0.1</p>
-            </div>
-            <div class="content-foo">
-                <h4>Contacto</h4>
-                <p>Bogotá, Colombia</p>
-                <p>Brian Orlando Rodriguez Velandia</p>
-                <p> +57 300 444 73 47</p>
-                <p>Julian Camilo Benavides Gamboa</p>
-                <p> +57 314 332 86 74</p>
-            </div>
-        </div>
-        <h6 class="titulo-final">&copy; Brian Rodriguez & Julian Benavides© 2022. All rights reserved</h6>
-    </footer>
 </body>
 
 </html>

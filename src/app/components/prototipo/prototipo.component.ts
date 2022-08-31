@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, NgZone, } from '@angular/core';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { GapiService } from '../../services/gapiService'
 
 
@@ -18,7 +19,6 @@ export class PrototipoComponent implements AfterViewInit  {
   
   constructor(private gapiServ: GapiService, private router:Router, private zone: NgZone) {
     this.isLogin = Boolean(localStorage.getItem("isLogin"));
-    console.log(this.isLogin)
     
    }
 
@@ -86,25 +86,6 @@ export class PrototipoComponent implements AfterViewInit  {
               }, (err:any) => { console.error("Execute error", err); })
   }
 
-
-  listFiles(){
-    gapi.client.drive.files.list({
-      'pageSize': 10,
-      'fields': "nextPageToken, files(id, name)"
-    }).then(function(response:any) {
-      console.log('Files:');
-      var files = response.result.files;
-      if (files && files.length > 0) {
-        for (var i = 0; i < files.length; i++) {
-          var file = files[i];
-          console.log(file.name + ' (' + file.id + ')');
-        }
-      } else {
-        console.log('No files found.');
-      }
-    });
-  }
-
   mostrarOpciones(){
     this.verificarCarpetaPadre();
     console.log(gapi.client.docs.documents);
@@ -115,10 +96,15 @@ export class PrototipoComponent implements AfterViewInit  {
     await gapi.auth2.getAuthInstance().signOut();
     localStorage.removeItem('isLogin');
     localStorage.removeItem('IdBitacora');
-    console.log(this.isLogin);
+    localStorage.removeItem('IdRecursos'); 
     this.gapiServ.updateGapi(gapi);
     console.log(localStorage);
-
+    Swal.fire({
+      title: 'Sesión Cerrada',
+      text: 'Sesión cerrada correctamente',
+      icon: 'success',
+      confirmButtonText: 'Aceptar'
+    })
     this.zone.run(() => {
       this.router.navigate(['/index']);
   });
