@@ -1,58 +1,89 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<body>
-    <main>
-        <section class="menu">
-            <div class="contenedor">
-                <h2 class="titulo" style="margin-bottom: 20px;">Registrar Facultad</h2>
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" style="border-radius: 20px; opacity: 70%; cursor: alias; font-size: 18px; text-decoration: underline; border-color: black;" data-toggle="modal"  data-target=".bd-example-modal-lg">Información</button>            
-                    </div>            
-                <div class="formulario">
-                    <form [formGroup]="form" (ngSubmit)="creaCarpeta()">
-                        <div style="text-align: center;" class="card-body">
-                            <h5 class="titulo-forms">NOMBRE DE LA FACULTAD</h5>
-                            <input style="width: 80%;" formControlName="facultad" type="text" class="decoration-inputs" name="" id="">
-                            <h6 style="padding-top: 10px; padding-bottom: 10px;">Por favor digite COMPLETAMENTE el nombre de la facultad. Ej: Facultad de Artes</h6>
-                            <button class="button4" style=" border-color: black;">
-                                SIGUIENTE
-                            </button>
-                        </div>
-                    </form>
-                </div> 
+<main>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/menu" style="-webkit-text-stroke: 1px white;">
+        <img width="30" height="24" class="d-inline-block align-text-top" src="./assets/imgs/navbar.jpg" alt=""></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" (click)="navFacultad()" id="facultad"
+              style="cursor: pointer;">Registrar Facultad</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="navProyecto()" id="proyecto" style="cursor: pointer;">Registrar Proyecto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="navMateria()" id="materia" style=" cursor: pointer;">Registrar Asignatura</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="navClase()" id="clase" style=" cursor: pointer;">Registrar Clase</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" (click)="navBitacora()" id="bitacora" style="cursor: pointer;">Generar Bitacora</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <section class="menu">
+    <div class="contenedor">
+      <h2 class="titulo" style="margin-bottom: 20px;">Registrar Facultad</h2>
+      <div style="text-align: center; margin-bottom: 20px;">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary"
+          style="border-radius: 20px; opacity: 70%; cursor: alias; font-size: 18px; text-decoration: underline; border-color: black;"
+          data-toggle="modal" data-target=".bd-example-modal-lg" id="modal">Información</button>
+      </div>
+      <div class="formulario">
+        <form [formGroup]="form" (ngSubmit)="creaCarpeta()" class="needs-validation" novalidate>
+          <div style="text-align: center;" class="card-body">
+            <h5 class="titulo-forms" for="validationCustom01">Nombre de la Facultad</h5>
+            <br>
+            <input placeholder="Facultad" formControlName="facultad" type="text" class="form-control"
+              id="validationCustom01" required>
+            <div class="invalid-feedback">
+              {{alertaFormulario}}
             </div>
-        </section>
-        <!-- Modal -->
-  <script type="text/javascript">
-    $( function(){
-        $('#Mymodal').modal('show');
-    } )
-</script>
-  <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <br>
+            <h6 style="padding-top: 10px; padding-bottom: 10px;">Por favor digite COMPLETAMENTE el nombre de
+              la facultad. Ej: Facultad de Artes</h6>
+            <br>
+            <button class="button4" style=" border-color: black;">
+              SIGUIENTE
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+  <!-- Modal -->
+  <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <section class="contenedor sobre-nosotros">
-            <h2 class="titulo">Registrar Facultad</h2>
-            <div class="contenedor-sobre-nosotros">
-                <img src="./assets/imgs/ilustracion2.svg" alt="" class="imagen-about-us">
-                <div class="contenido-textos">
-                    <h3><span>1</span>Resumen</h3>
-                    <p>Por medio de la siguiente pantalla es posible realizar el registro de una facultad del ente educativo.</p>
-                    <h3><span>2</span>Guía rápida</h3>
-                    <p>Permite crear un directorio con el nombre asignado en la raíz del drive del docente donde a futuro se crearán directorios correspondientes a proyectos curriculares, grupos y sesiones de clase.
-                        (La carpeta originada tendrá como nombre "Facultad de [Texto Ingresado]")</p>
-                </div>
+          <h2 class="titulo">Registrar Facultad</h2>
+          <div class="contenedor-sobre-nosotros">
+            <img src="./assets/imgs/ilustracion2.svg" alt="" class="imagen-about-us">
+            <div class="contenido-textos">
+              <h3><span>1</span>Resumen</h3>
+              <p>Por medio de la siguiente pantalla es posible realizar el registro de una facultad del
+                ente educativo.</p>
+              <h3><span>2</span>Guía rápida</h3>
+              <p>Permite crear un directorio con el nombre asignado en la raíz del drive del docente donde
+                a futuro se crearán directorios correspondientes a proyectos curriculares, grupos y
+                sesiones de clase.</p>
             </div>
+          </div>
         </section>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
-          </div>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+        </div>
       </div>
     </div>
   </div>
-    </main>
-   </body>
-
-</html>
+</main>

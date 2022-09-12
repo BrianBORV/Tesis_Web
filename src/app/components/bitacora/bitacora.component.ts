@@ -29,6 +29,8 @@ export class BitacoraComponent implements OnInit {
   archivoActual: any;
   body: any;
   map: any;
+  alertaFormulario:string = "Por favor diligencie este campo";
+  isLogin: boolean;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
@@ -39,10 +41,28 @@ export class BitacoraComponent implements OnInit {
       nombre: '',
       periodo: ''
     });
+    this.isLogin = Boolean(localStorage.getItem("isLogin"));
   }
 
   ngOnInit(): void {
+    if (this.isLogin ==true) {
+      var info: any = document.getElementById("modal");
+    info.click();
+    var form = document.getElementsByClassName('needs-validation')[0] as HTMLFormElement;
+    form.addEventListener('submit', function(event) {
+      if (form.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    }, false);
     this.buscarFacultad();
+    }else{
+      this.zone.run(() => {
+        this.router.navigate(['/index']);
+      });
+    }
+    
   }
 
   onSelect(val: any) {
@@ -110,10 +130,7 @@ export class BitacoraComponent implements OnInit {
     }
   }
 
-  async completarBitacora() {
-    let inicio = this.form.get("inicio")?.value;
-    let fin = this.form.get("fin")?.value;
-    let nombre = this.form.get("nombre")?.value;
+  async completarBitacora(inicio:any,fin:any, nombre:any) {
     let periodo = this.form.get("periodo")?.value;
     let request: any[] = [];
 
@@ -436,10 +453,21 @@ export class BitacoraComponent implements OnInit {
   }
 
   generarBitacora() {
+    var periodo = this.form.get("periodo")?.value;
+    var inicio = this.form.get("inicio")?.value;
+    var fin = this.form.get("fin")?.value;
+    var nombre = this.form.get("nombre")?.value;
+    if (periodo == null || periodo == "" || this.IdFacultad==null || this.IdProyecto==null || this.IdMateria==null || nombre == null || nombre == "" || inicio==null || fin==null) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Verifique la información ingresada',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      })
+    } else {
     this.nombreFacultad = this.files.find(x => x.id == this.IdFacultad).name;
     this.nombreProyecto = this.filesP.find(x => x.id == this.IdProyecto).name;
     this.nombreMateria = this.filesM.find(x => x.id == this.IdMateria).name;
-    let periodo = this.form.get("periodo")?.value;
     this.nombreBitacora = 'Informe ' + this.nombreMateria + " " + periodo;
     console.log("Generando bitacora")
     gapi.client.drive.files.list({
@@ -1212,7 +1240,7 @@ export class BitacoraComponent implements OnInit {
                   console.log("actualizado")
                   console.log("Bitacora generada exitosamente")
                 }).then((response: any) => {
-                  this.completarBitacora();
+                  this.completarBitacora(inicio,fin, nombre);
                   this.encabezadoBitacora();
                   this.guardarArchivos();
                   Swal.fire({
@@ -1231,7 +1259,7 @@ export class BitacoraComponent implements OnInit {
             })
         }
       })
-
+    }
   }
 
   async encabezadoBitacora() {
@@ -1513,448 +1541,34 @@ export class BitacoraComponent implements OnInit {
       })
   }
 
-  /* async estiloBitacora(){
-    var request:any;
-    let request2:any;
-    request2=[
-      {
-        "updateTableCellStyle": {
-          "tableRange": {
-            "tableCellLocation": {
-              "columnIndex": 0,
-              "rowIndex": 0,
-              "tableStartLocation": {
-                "index": this.body.content[2].table.tableRows[0].startIndex
-              }
-            },
-            "columnSpan": 5,
-            "rowSpan": 1
-          },
-          "fields": "*",
-          "tableCellStyle": {
-            "contentAlignment": "MIDDLE"
-          }
-        }
-      },
-      {
-        "updateTableCellStyle": {
-          "tableRange": {
-            "tableCellLocation": {
-              "columnIndex": 0,
-              "rowIndex": 1,
-              "tableStartLocation": {
-                "index": this.body.content[2].table.tableRows[0].startIndex
-              }
-            },
-            "columnSpan": 5,
-            "rowSpan": 1
-          },
-          "fields": "*",
-          "tableCellStyle": {
-            "contentAlignment": "MIDDLE"
-          }
-        }
-      },
-      {
-        "updateTableCellStyle": {
-          "tableRange": {
-            "tableCellLocation": {
-              "columnIndex": 0,
-              "rowIndex": 2,
-              "tableStartLocation": {
-                "index": this.body.content[2].table.tableRows[0].startIndex
-              }
-            },
-            "columnSpan": 5,
-            "rowSpan": 1
-          },
-          "fields": "*",
-          "tableCellStyle": {
-            "contentAlignment": "MIDDLE"
-          }
-        }
-      },
-      {
-        "updateTableCellStyle": {
-          "tableRange": {
-            "tableCellLocation": {
-              "columnIndex": 0,
-              "rowIndex": 4,
-              "tableStartLocation": {
-                "index": this.body.content[2].table.tableRows[0].startIndex
-              }
-            },
-            "columnSpan": 5,
-            "rowSpan": 1
-          },
-          "fields": "*",
-          "tableCellStyle": {
-            "contentAlignment": "MIDDLE"
-          }
-        }
-      }
-    ]
-    await gapi.client.docs.documents.batchUpdate({
-      "documentId": this.IdBitacora, 
-      "resource": {
-        "requests": request2
-      }
-    })  
-    
-        console.log(this.body)
-        let request3:any;
-        request3=[
-          {
-            "updateParagraphStyle": {
-              "fields": "alignment",
-              "paragraphStyle": {
-                "alignment": "CENTER"
-                
-              },
-              "range": {
-                "startIndex": this.body.content[2].table.tableRows[0].tableCells[0].content[0].startIndex,
-                "endIndex": this.body.content[2].table.tableRows[2].tableCells[0].content[0].endIndex
-                
-              }
-            }
-            
-          },
-          {
-            "updateParagraphStyle": {
-              "fields": "alignment",
-              "paragraphStyle": {
-                "alignment": "CENTER"
-                
-              },
-              "range": {
-                "startIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].startIndex,
-                "endIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].endIndex
-                
-              }
-            }
-            
-          }
-        ]
+  navFacultad(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_facultad']);
+    });
+  }
 
-        let request4:any;
-        request4=[
-          {
-            "updateTextStyle": {
-              "fields": "*",
-              "textStyle": {
-                "weightedFontFamily": {
-                  "fontFamily": "Calibri"
-                }
-              },
-              "range": {
-                "startIndex": this.body.content[2].startIndex,
-                "endIndex": this.body.content[2].endIndex
-              }
-            }
-          },
-          {
-            "updateTextStyle": {
-              "fields": "*",
-              "textStyle": {
-                "bold": true
-                
-              },
-              "range": {
-                "startIndex": this.body.content[2].table.tableRows[0].tableCells[0].content[0].startIndex,
-                "endIndex": this.body.content[2].table.tableRows[0].tableCells[0].content[0].endIndex 
-                
-              }
-            }
-            
-          },
-          {
-            "updateTextStyle": {
-              "fields": "*",
-              "textStyle": {
-                "bold": true
-                
-              },
-              "range": {
-                "startIndex": this.body.content[2].table.tableRows[0].tableCells[3].content[0].startIndex,
-                "endIndex": this.body.content[2].table.tableRows[0].tableCells[3].content[0].endIndex
-                
-              }
-            }
-            
-          },
-          {
-            "updateTextStyle": {
-              "fields": "*",
-              "textStyle": {
-                "bold": true
-                
-              },
-              "range": {
-                "startIndex": this.body.content[2].table.tableRows[1].tableCells[0].content[0].startIndex,
-                "endIndex": this.body.content[2].table.tableRows[1].tableCells[0].content[0].endIndex 
-                
-              }
-            }
-            
-          },
-          {
-            "updateTextStyle": {
-              "fields": "*",
-              "textStyle": {
-                "bold": true
-                
-              },
-              "range": {
-                "startIndex": this.body.content[2].table.tableRows[1].tableCells[2].content[0].startIndex,
-                "endIndex": this.body.content[2].table.tableRows[1].tableCells[2].content[0].endIndex
-                
-              }
-            }
-            
-          },
-          {
-            "updateTextStyle": {
-              "fields": "*",
-              "textStyle": {
-                "bold": true
-                
-              },
-              "range": {
-                "startIndex": this.body.content[2].table.tableRows[2].tableCells[0].content[0].startIndex,
-                "endIndex": this.body.content[2].table.tableRows[2].tableCells[0].content[0].endIndex
-                
-              }
-            }
-            
-          },
-          {
-            "updateTextStyle": {
-              "fields": "*",
-              "textStyle": {
-                "bold": true
-                
-              },
-              "range": {
-                "startIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].startIndex,
-                "endIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].endIndex
-                
-              }
-            }
-            
-          }
-        ]
-        await gapi.client.docs.documents.batchUpdate({
-          "documentId": this.IdBitacora, 
-          "resource": {
-          "requests": request3
-          }
-        })
-        await gapi.client.docs.documents.batchUpdate({
-          "documentId": this.IdBitacora, 
-          "resource": {
-          "requests": request4
-          }
-        })
-    request=[
-      {
-        "updateTableCellStyle": {
-          "fields": "backgroundColor",
-          "tableCellStyle": {
-        "contentAlignment": "MIDDLE",
-            "backgroundColor": {
-              "color": {
-                "rgbColor": {
-                  "blue": 0.8509804,
-                  "green": 0.8509804,
-                  "red": 0.8509804
-                }
-              }
-            }
-            
-          },
-          "tableRange": {
-            "tableCellLocation": {
-              "columnIndex": 0,
-              "rowIndex": 0,
-              "tableStartLocation": {
-                "index": this.body.content[2].table.tableRows[0].startIndex
-                
-              }
-            },
-            "columnSpan": 1,
-            "rowSpan": 1
-          }
-          
-        }
-        
-      },
-      {
-        "updateTableCellStyle": {
-          "fields": "backgroundColor",
-          "tableCellStyle": {
-        "contentAlignment": "MIDDLE",
-            "backgroundColor": {
-              "color": {
-                "rgbColor": {
-                  "blue": 0.8509804,
-                  "green": 0.8509804,
-                  "red": 0.8509804
-                }
-              }
-            }
-            
-          },
-          "tableRange": {
-            "tableCellLocation": {
-              "columnIndex": 3,
-              "rowIndex": 0,
-              "tableStartLocation": {
-                "index": this.body.content[2].table.tableRows[0].startIndex
-                
-              }
-            },
-            "columnSpan": 1,
-            "rowSpan": 1
-          }
-          
-        }
-        
-      },
-      {
-        "updateTableCellStyle": {
-          "fields": "backgroundColor",
-          "tableCellStyle": {
-        "contentAlignment": "MIDDLE",
-            "backgroundColor": {
-              "color": {
-                "rgbColor": {
-                  "blue": 0.8509804,
-                  "green": 0.8509804,
-                  "red": 0.8509804
-                }
-              }
-            }
-            
-          },
-          "tableRange": {
-            "tableCellLocation": {
-              "columnIndex": 0,
-              "rowIndex": 1,
-              "tableStartLocation": {
-                "index": this.body.content[2].table.tableRows[0].startIndex
-                
-              }
-            },
-            "columnSpan": 1,
-            "rowSpan": 1
-          }
-          
-        }
-        
-      },
-      {
-        "updateTableCellStyle": {
-          "fields": "backgroundColor",
-          "tableCellStyle": {
-        "contentAlignment": "MIDDLE",
-            "backgroundColor": {
-              "color": {
-                "rgbColor": {
-                  "blue": 0.8509804,
-                  "green": 0.8509804,
-                  "red": 0.8509804
-                }
-              }
-            }
-            
-          },
-          "tableRange": {
-            "tableCellLocation": {
-              "columnIndex": 2,
-              "rowIndex": 1,
-              "tableStartLocation": {
-                "index": this.body.content[2].table.tableRows[0].startIndex
-                
-              }
-            },
-            "columnSpan": 1,
-            "rowSpan": 1
-          }
-          
-        }
-        
-      },
-      {
-        "updateTableCellStyle": {
-          "fields": "backgroundColor",
-          "tableCellStyle": {
-        "contentAlignment": "MIDDLE",
-            "backgroundColor": {
-              "color": {
-                "rgbColor": {
-                  "blue": 0.8509804,
-                  "green": 0.8509804,
-                  "red": 0.8509804
-                }
-              }
-            }
-            
-          },
-          "tableRange": {
-            "tableCellLocation": {
-              "columnIndex": 0,
-              "rowIndex": 2,
-              "tableStartLocation": {
-                "index": this.body.content[2].table.tableRows[0].startIndex
-                
-              }
-            },
-            "columnSpan": 5,
-            "rowSpan": 1
-          }
-          
-        }
-        
-      },
-      {
-        "updateTableCellStyle": {
-          "fields": "backgroundColor",
-          "tableCellStyle": {
-        "contentAlignment": "MIDDLE",
-            "backgroundColor": {
-              "color": {
-                "rgbColor": {
-                  "blue": 0.8509804,
-                  "green": 0.8509804,
-                  "red": 0.8509804
-                }
-              }
-            }
-            
-          },
-          "tableRange": {
-            "tableCellLocation": {
-              "columnIndex": 0,
-              "rowIndex": 4,
-              "tableStartLocation": {
-                "index": this.body.content[2].table.tableRows[0].startIndex
-                
-              }
-            },
-            "columnSpan": 5,
-            "rowSpan": 1
-          }
-          
-        }
-        
-      }
-    ]    
-    await gapi.client.docs.documents.batchUpdate({
-      "documentId": this.IdBitacora, 
-      "resource": {
-        "requests": request
-      }
-    })
-    
-  } */
+  navProyecto(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_proyecto']);
+    });
+  }
+
+  navMateria(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_materia']);
+    });
+  }
+
+  navClase(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_clase']);
+    });
+  }
+
+  navBitacora(){
+    this.zone.run(() => {
+      this.router.navigate(['/generar_bitacora']);
+    });
+  }
+
 }

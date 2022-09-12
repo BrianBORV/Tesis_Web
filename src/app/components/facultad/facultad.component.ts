@@ -4,8 +4,6 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 declare var gapi: any;
-declare var async: any;
-declare var pageToken: null;
 
 @Component({
   selector: 'app-facultad',
@@ -16,14 +14,35 @@ export class FacultadComponent implements OnInit {
   fileMetadata: any;
   form: any;
   facultad:any;
+  alertaFormulario:string = "Por favor diligencie este campo";
+  isLogin: boolean;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
       facultad: ''
     });
+    this.isLogin = Boolean(localStorage.getItem("isLogin"));
+    
   }
 
   ngOnInit(): void {
+    if (this.isLogin == true) {
+      var info: any = document.getElementById("modal");
+    info.click();
+    var form = document.getElementsByClassName('needs-validation')[0] as HTMLFormElement;
+    form.addEventListener('submit', function(event) {
+      if (form.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    }, false);
+    }else{
+      this.zone.run(() => {
+        this.router.navigate(['/index']);
+      });
+    }
+    
   }
 
   creaCarpeta() {
@@ -83,6 +102,36 @@ export class FacultadComponent implements OnInit {
     }
     
 
+  }
+
+  navFacultad(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_facultad']);
+    });
+  }
+
+  navProyecto(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_proyecto']);
+    });
+  }
+
+  navMateria(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_materia']);
+    });
+  }
+
+  navClase(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_clase']);
+    });
+  }
+
+  navBitacora(){
+    this.zone.run(() => {
+      this.router.navigate(['/generar_bitacora']);
+    });
   }
 
 }

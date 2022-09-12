@@ -80,7 +80,12 @@ header {
 nav{
     text-align: right;
     padding: 30px 50px 0 0;
+    background: #a877d0;  
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
 }
+
 
 nav > a{
     color:#fff;
@@ -325,6 +330,10 @@ footer{
     font-size: 24px;
     margin: 20px 0 0 0;
     color: #9e9797;
+}
+
+.decoration-inputs.is-invalid, .form-control.is-invalid, .was-validated .decoration-inputs:invalid, .was-validated .form-control:invalid {
+    border-color: #dc3545;
 }
 
 .decoration-inputs{

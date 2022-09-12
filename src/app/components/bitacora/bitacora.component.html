@@ -1,97 +1,174 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Prototipo | Generar Bitacora</title>
-    <link rel="shortcut icon" href="./assets/imgs/logo.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800&display=swap" rel="stylesheet"> 
-</head>
-
-<body>
-    <main>
-        <section class="menu">
-            <div class="contenedor">
-                <h2 class="titulo" style="margin-bottom: 20px;">Generar Bitacora</h2>  
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" style="border-radius: 20px; opacity: 70%; cursor: alias; font-size: 18px; text-decoration: underline; border-color: black;" data-toggle="modal"  data-target=".bd-example-modal-lg">Información</button>            
-                    </div>          
-                <div class="formulario">
-                    <div style="text-align: center;" class="card-body">
-                    <form [formGroup]="form" (ngSubmit)="generarBitacora()">
-                        <h5 class="titulo-forms">NOMBRE COMPLETO</h5>
-                        <input class="decoration-inputs" style="width: 80%;" type="text" name="" id="" formControlName="nombre">
-                        <h5 class="titulo-forms">PERIODO DE INFORME</h5>
-                        <input class="decoration-inputs" style="width: 80%;" type="text" name="" id="" formControlName="periodo">
-                        <h5></h5>
-                        <div>
-                            <h5 class="titulo-forms"> Inicio del Periodo </h5>
-                            <input class="decoration-inputs" style="width: 80%;" formControlName="inicio" type="date" id="start" name="trip-start"  min="2022-01-01" max="2025-12-31">
-                            <h5 class="titulo-forms"> Fin del Periodo </h5>
-                            <input class="decoration-inputs" style="width: 80%;" formControlName="fin" type="date" id="start" name="trip-start" min="2022-01-01" max="2025-12-31">
-                        </div>
-                        <h5 class="titulo-forms">FACULTAD</h5>
-                        <select class="decoration-inputs" style="width: 80%;" (change)='onSelect(val.value)' #val>
-                            <option disabled value="null" selected>--Seleccione Facultad--</option>
-                            <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}</option>
-                        </select>
-                        <h5 class="titulo-forms">PROYECTO CURRICULAR</h5>
-                        <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdProyecto"  [ngModelOptions]="{standalone: true}"  (change)='onSelectP(valP.value)' #valP>
-                            <option disabled value="null">--Seleccione Proyecto--</option>
-                            <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">{{filesP[i].name}}</option>
-                        </select>
-                        <div>
-                            <h5 class="titulo-forms">ASIGNATURA</h5>
-                            <select class="decoration-inputs" style="width: 80%;" [(ngModel)] = "IdMateria"  [ngModelOptions]="{standalone: true}"  (change)='onSelectM(valM.value)' #valM>
-                                <option disabled value="null">--Seleccione Asignatura--</option>
-                                <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">{{filesM[i].name}}</option>
-                            </select>
-                        </div>
-                        <div class="centrar-general">
-                            <button class="button4" style=" border-color: black;">GENERAR BITACORA</button> 
-                        </div>          
-                    </form>
-                    </div>
-                </div> 
+<main>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/menu">
+                <img width="30" height="24" class="d-inline-block align-text-top" src="./assets/imgs/navbar.jpg" alt=""></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="navFacultad()"
+                            style="cursor: pointer;">Registrar Facultad</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="navProyecto()"
+                            style="cursor: pointer;">Registrar Proyecto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"  (click)="navMateria()"
+                            style="cursor: pointer;">Registrar Asignatura</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="navClase()" style="cursor: pointer;">Registrar
+                            Clase</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" (click)="navBitacora()" style="cursor: pointer;">Generar
+                            Bitacora</a>
+                    </li>
+                </ul>
             </div>
-        </section>
-        <!-- Modal -->
-  <script type="text/javascript">
-    $( function(){
-        $('#Mymodal').modal('show');
-    } )
-</script>
-  <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"  aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <section class="contenedor sobre-nosotros">
-            <h2 class="titulo">Bitácora</h2>
-            <div class="contenedor-sobre-nosotros">
-                <img src="./assets/imgs/ilustracion2.svg" alt="" class="imagen-about-us">
-                <div class="contenido-textos">
-                    <h3><span>1</span>Resumen</h3>
-                    <p>Por medio de la siguiente pantalla se podran introducir y seleccionar los datos necesarios para generar el reporte final de una clase en especifico, completando los campos especificados a continuacion, los cuales se alimentan de los directorios creados en el drive del docente.<br>
-                       Una vez generada la bitácora todos los registros de las clases serán guardados en una carpeta con nombre del periodo del informe.</p>
-                    <h3><span>2</span>Guía rápida</h3>
-                    <p> 1. Digite su nombre completo.<br>
-                        2. Digite el periodo del informe a realizar.<br>
-                        3. Seleccione las fechas de inicio y final del periodo del informe a generar.<br>
-                        4. Seleccione la Facultad y el Proyecto Curricular a los que pertenece la Materia del informe.<br>
-                        5. Seleccione la Materia del informe a generar.<br>
-                        NOTA: Al hacer click en "Generar" se genera un documento que condensa la totalidad de clases registradas para la materia seleccionada.</p>
+        </div>
+    </nav>
+    <section class="menu">
+        <div class="contenedor">
+            <h2 class="titulo" style="margin-bottom: 20px;">Generar Bitacora</h2>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <!-- Button trigger modal -->
+                <button type="button" id="modal" class="btn btn-primary"
+                    style="border-radius: 20px; opacity: 70%; cursor: alias; font-size: 18px; text-decoration: underline; border-color: black;"
+                    data-toggle="modal" data-target=".bd-example-modal-lg">Información</button>
+            </div>
+            <div class="formulario">
+                <div style="text-align: center;" class="card-body">
+                    <form [formGroup]="form" (ngSubmit)="generarBitacora()" class="needs-validation" novalidate>
+                        <h5 class="titulo-forms">Nombre Completo</h5>
+                        <div>
+                            <input class="form-control" type="text" name="" id="validationCustom01"
+                                formControlName="nombre" required>
+                            <div class="invalid-feedback">
+                                {{alertaFormulario}}
+                            </div>
+                            <br>
+                        </div>
+                        <h5 class="titulo-forms">Periodo de Informe</h5>
+                        <div class="centrar-general">
+                            <div>
+                                <input class="form-control" type="text" name="" id="validationCustom02"
+                                    formControlName="periodo" required>
+                                <div class="invalid-feedback">
+                                    {{alertaFormulario}}
+                                </div>
+                            </div>
+                        </div>
+                        <table class="centrar-general">
+                            <tr>
+                                <td style="padding: 10px; text-align: center;">
+                                    <h5 class="titulo-forms"> Inicio del Periodo </h5>
+                                    <input class="decoration-inputs form-control" formControlName="inicio" type="date"
+                                        id="validationCustom03" min="2022-01-01" max="" required>
+                                    <div class="invalid-feedback">
+                                        {{alertaFormulario}}
+                                    </div>
+                                    <br>
+                                </td>
+                                <td style="padding: 10px; text-align: center;">
+                                    <h5 class="titulo-forms"> Fin del Periodo </h5>
+                                    <input class="decoration-inputs form-control" formControlName="fin" type="date"
+                                        id="validationCustom04" min="2022-01-01" max="" required>
+                                    <div class="invalid-feedback">
+                                        {{alertaFormulario}}
+                                    </div>
+                                    <br>
+                                </td>
+                            </tr>
+                        </table>
+                        <h5 style="padding-top: 5px; padding-bottom: 5px;" class="titulo-forms"
+                            for="validationCustom01">Facultad</h5>
+                        <select id="validationCustom01" class="custom-select" style="width: 80%;"
+                            (change)='onSelect(val.value)' #val required>
+                            <option value="">--Seleccione Facultad--</option>
+                            <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}
+                            </option>
+                        </select>
+                        <div class="invalid-feedback">
+                            {{alertaFormulario}}
+                        </div>
+                        <br>
+                        <h5 style="padding-top: 10px; padding-bottom: 5px;" class="titulo-forms"
+                            for="validationCustom02">Proyecto Curricular</h5>
+                        <select id="validationCustom02" class="custom-select" style="width: 80%;"
+                            (change)='onSelectP(valP.value)' #valP required>
+                            <option value="">--Seleccione Proyecto--</option>
+                            <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">
+                                {{filesP[i].name}}</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            {{alertaFormulario}}
+                        </div>
+                        <br>
+                        <h5 class="titulo-forms" style="padding-top: 10px;" for="validationCustom03">Asignatura</h5>
+                        <select id="validationCustom03" class="custom-select" style="width: 80%;"
+                            (change)='onSelectM(valM.value)' #valM required>
+                            <option value="">--Seleccione Asignatura--</option>
+                            <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">
+                                {{filesM[i].name}}</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            {{alertaFormulario}}
+                        </div>
+                        <br>
+                        <br>
+                        <div class="centrar-general">
+                            <button class="button4" style=" border-color: black;">GENERAR BITACORA</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </section>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
-          </div>
-      </div>
+        </div>
+    </section>
+    <!-- Modal -->
+    <script type="text/javascript">
+        $(function () {
+            $('#Mymodal').modal('show');
+        })
+    </script>
+    <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <section class="contenedor sobre-nosotros">
+                    <h2 class="titulo">Bitácora</h2>
+                    <div class="contenedor-sobre-nosotros">
+                        <img src="./assets/imgs/ilustracion2.svg" alt="" class="imagen-about-us">
+                        <div class="contenido-textos">
+                            <h3><span>1</span>Resumen</h3>
+                            <p>Por medio de la siguiente pantalla se podran introducir y seleccionar los datos
+                                necesarios para generar el reporte final de una clase en especifico, completando los
+                                campos especificados a continuacion, los cuales se alimentan de los directorios creados
+                                en el drive del docente.<br>
+                                Una vez generada la bitácora todos los registros de las clases serán guardados en una
+                                carpeta con nombre del periodo del informe.</p>
+                            <h3><span>2</span>Guía rápida</h3>
+                            <p> 1. Digite su nombre completo.<br>
+                                2. Digite el periodo del informe a realizar.<br>
+                                3. Seleccione las fechas de inicio y final del periodo del informe a generar.<br>
+                                4. Seleccione la Facultad y el Proyecto Curricular a los que pertenece la Materia del
+                                informe.<br>
+                                5. Seleccione la Materia del informe a generar.<br>
+                                NOTA: Al hacer click en "Generar" se genera un documento que condensa la totalidad de
+                                clases registradas para la materia seleccionada.</p>
+                        </div>
+                    </div>
+                </section>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-    </main>
-</body>
-
-</html>
+</main>

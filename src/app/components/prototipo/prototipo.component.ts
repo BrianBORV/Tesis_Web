@@ -11,19 +11,31 @@ declare var gapi: any;
   templateUrl: './prototipo.component.html',
   styleUrls: ['./prototipo.component.scss']
 })
-export class PrototipoComponent implements AfterViewInit  {
+export class PrototipoComponent implements AfterViewInit {
   isLogin: boolean = false;
   fileMetadata: any;
-// If modifying these scopes, delete token.json.
+  // If modifying these scopes, delete token.json.
 
-  
-  constructor(private gapiServ: GapiService, private router:Router, private zone: NgZone) {
+
+  constructor(private gapiServ: GapiService, private router: Router, private zone: NgZone) {
     this.isLogin = Boolean(localStorage.getItem("isLogin"));
-    
-   }
 
-   initClient() {
-  
+  }
+
+  ngOnInit() {
+    if (this.isLogin == true) {
+      var info: any = document.getElementById("modal");
+      info.click();
+    }else{
+      this.zone.run(() => {
+        this.router.navigate(['/index']);
+      });
+    }
+
+  }
+
+  initClient() {
+
     // It's OK to expose these credentials, they are client safe.
     let initObj = {
       apiKey: 'AIzaSyDnkotdvUH83-K_M7h3i-Y6p2AJwihAz8Q',
@@ -32,37 +44,37 @@ export class PrototipoComponent implements AfterViewInit  {
       scope: 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/documents'
     };
 
-    
+
     //this.gapiServ.updateGapi(gapi);
     gapi.client.init(initObj);
-    
+
 
   }
 
   ngAfterViewInit(): void {
-   
-    if(this.isLogin){
-      this.gapiServ.gapi$.subscribe((data)=>{
+
+    if (this.isLogin) {
+      this.gapiServ.gapi$.subscribe((data) => {
         if (data) {
-          gapi = data;          
+          gapi = data;
         }
       })
-    }else{
+    } else {
       gapi.load('client:auth2', this.initClient);
-    }       
-    
+    }
+
   }
 
-  login(){
+  login() {
     gapi.auth2.getAuthInstance().signIn();
-    this.isLogin=gapi.auth2.getAuthInstance().isSignedIn.get();
-    localStorage.setItem("isLogin",String(this.isLogin) );
+    this.isLogin = gapi.auth2.getAuthInstance().isSignedIn.get();
+    localStorage.setItem("isLogin", String(this.isLogin));
     console.log(this.isLogin);
     gapi.auth2.getAuthInstance().signIn().then(this.mostrarOpciones());
     this.gapiServ.updateGapi(gapi);
   }
 
-  verificarCarpetaPadre(){
+  verificarCarpetaPadre() {
     this.fileMetadata = {
       'name': "Bitacoras Academicas",
       'mimeType': 'application/vnd.google-apps.folder'
@@ -70,33 +82,63 @@ export class PrototipoComponent implements AfterViewInit  {
     gapi.client.drive.files.list({
       "q": "name='Bitacoras Academicas'"
     })
-        .then((response:any) => {
-                // Handle the results here (response.result has the parsed body).
-                if (response.result.files.length == 0){
-                  gapi.client.drive.files.create({
-                    resource: this.fileMetadata,
-                    fields: 'id'
-                  }).then((response:any) =>{
-                    localStorage.setItem("IdBitacora", response.result.id);
-                  });
-                }else{
-                  localStorage.setItem("IdBitacora",response.result.files[0].id);
-                  console.log(response.result.files[0].id)
-                }
-              }, (err:any) => { console.error("Execute error", err); })
+      .then((response: any) => {
+        // Handle the results here (response.result has the parsed body).
+        if (response.result.files.length == 0) {
+          gapi.client.drive.files.create({
+            resource: this.fileMetadata,
+            fields: 'id'
+          }).then((response: any) => {
+            localStorage.setItem("IdBitacora", response.result.id);
+          });
+        } else {
+          localStorage.setItem("IdBitacora", response.result.files[0].id);
+          console.log(response.result.files[0].id)
+        }
+      }, (err: any) => { console.error("Execute error", err); })
   }
 
-  mostrarOpciones(){
+  mostrarOpciones() {
     this.verificarCarpetaPadre();
     console.log(gapi.client.docs.documents);
     console.log(gapi.client.drive.files.create);
   }
 
-  async logOut(){
+  navFacultad() {
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_facultad']);
+    });
+  }
+
+  navProyecto() {
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_proyecto']);
+    });
+  }
+
+  navMateria() {
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_materia']);
+    });
+  }
+
+  navClase() {
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_clase']);
+    });
+  }
+
+  navBitacora() {
+    this.zone.run(() => {
+      this.router.navigate(['/generar_bitacora']);
+    });
+  }
+
+  async logOut() {
     await gapi.auth2.getAuthInstance().signOut();
     localStorage.removeItem('isLogin');
     localStorage.removeItem('IdBitacora');
-    localStorage.removeItem('IdRecursos'); 
+    localStorage.removeItem('IdRecursos');
     this.gapiServ.updateGapi(gapi);
     console.log(localStorage);
     Swal.fire({
@@ -107,7 +149,7 @@ export class PrototipoComponent implements AfterViewInit  {
     })
     this.zone.run(() => {
       this.router.navigate(['/index']);
-  });
+    });
 
   }
 

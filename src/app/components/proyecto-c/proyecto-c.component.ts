@@ -1,5 +1,5 @@
 import { Component, NgZone, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
@@ -16,16 +16,37 @@ export class ProyectoCComponent implements OnInit {
   isFiles: boolean = false;
   form: any;
   IdFacultad: any = null;
+  alertaFormulario:string = "Por favor diligencie este campo";
+  isLogin: boolean;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
-      proyecto: ''
+      proyecto: ['', [Validators.required]]
     });
+    this.isLogin = Boolean(localStorage.getItem("isLogin"));
 
   }
 
   ngOnInit(): void {
+    if (this.isLogin == true) {
+      var info: any = document.getElementById("modal");
+    info.click();
+    var form = document.getElementsByClassName('needs-validation')[0] as HTMLFormElement;
+    form.addEventListener('submit', function(event) {
+      if (form.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    }, false);
+
     this.buscarFacultad();
+    }else{
+      this.zone.run(() => {
+        this.router.navigate(['/index']);
+      });
+    }
+    
   }
 
   onSelect(val: any) {
@@ -34,10 +55,10 @@ export class ProyectoCComponent implements OnInit {
 
   creaCarpeta() {
     let proyecto = this.form.get("proyecto")?.value;
-    if (proyecto == null || proyecto == "") {
+    if (proyecto == null || proyecto == "" || this.IdFacultad==null) {
       Swal.fire({
         title: 'Error',
-        text: 'Debe digitar el nombre de un Proyecto Curricular',
+        text: 'Verifique la información ingresada',
         icon: 'error',
         confirmButtonText: 'Aceptar'
       })
@@ -90,15 +111,43 @@ export class ProyectoCComponent implements OnInit {
         "q": "mimeType='application/vnd.google-apps.folder' and '" + localStorage.getItem("IdBitacora") + "' in parents and name contains 'Facultad'"
       }).then((res: any) => {
         Array.prototype.push.apply(this.files, res.result.files);
-
-
         this.isFiles = true;
       });
 
     } catch (err) {
       // TODO(developer) - Handle error
       throw err;
+      
     }
+  }
+  navFacultad(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_facultad']);
+    });
+  }
+
+  navProyecto(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_proyecto']);
+    });
+  }
+
+  navMateria(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_materia']);
+    });
+  }
+
+  navClase(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_clase']);
+    });
+  }
+
+  navBitacora(){
+    this.zone.run(() => {
+      this.router.navigate(['/generar_bitacora']);
+    });
   }
 
 }

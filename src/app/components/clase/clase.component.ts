@@ -26,6 +26,8 @@ export class ClaseComponent implements OnInit {
   IdClase: any = null;
   anexos: any = null;
   listaRec: string[] = [];
+  alertaFormulario:string = "Por favor diligencie este campo";
+  isLogin: boolean;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
@@ -37,10 +39,28 @@ export class ClaseComponent implements OnInit {
       anexos: '',
       nombreAnexo: ''
     });
+    this.isLogin = Boolean(localStorage.getItem("isLogin"));
   }
 
   ngOnInit(): void {
+    if (this.isLogin ==true) {
+      var info: any = document.getElementById("modal");
+    info.click();
+    var form = document.getElementsByClassName('needs-validation')[0] as HTMLFormElement;
+    form.addEventListener('submit', function(event) {
+      if (form.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    }, false);
     this.buscarFacultad();
+    }else{
+      this.zone.run(() => {
+        this.router.navigate(['/index']);
+      });
+    }
+    
   }
 
   onSelect(val: any) {
@@ -87,7 +107,14 @@ export class ClaseComponent implements OnInit {
     let anexos = this.form.get("anexos")?.value.toString();
     let requestTabla: any[] = [];
     let requestTextoT: any[] = [];
-
+    if (clase == null || clase == "" || this.IdFacultad==null || this.IdProyecto==null || this.IdMateria==null|| inicio == null || fin== null || texto==null || texto=="") {
+      Swal.fire({
+        title: 'Error',
+        text: 'Verifique la información ingresada',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      })
+    } else {
     requestTabla = [
       {
         "insertTable": {
@@ -404,6 +431,7 @@ export class ClaseComponent implements OnInit {
           });
         }
       }, (err: any) => { console.error("Execute error", err); })
+    }
   }
 
   async buscarProyecto() {
@@ -926,6 +954,36 @@ export class ClaseComponent implements OnInit {
   limpiarAnexos() {
     this.listaRec = [];
     this.form.controls['anexos'].setValue();
+  }
+
+  navFacultad(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_facultad']);
+    });
+  }
+
+  navProyecto(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_proyecto']);
+    });
+  }
+
+  navMateria(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_materia']);
+    });
+  }
+
+  navClase(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_clase']);
+    });
+  }
+  
+  navBitacora(){
+    this.zone.run(() => {
+      this.router.navigate(['/generar_bitacora']);
+    });
   }
 
 }

@@ -19,18 +19,37 @@ export class MateriaComponent implements OnInit {
   isFilesP: boolean = false;
   IdFacultad: any = null;
   IdProyecto: any = null;
+  alertaFormulario:string = "Por favor diligencie este campo";
+  isLogin: boolean;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
       materia: '',
       grupo: ''
     });
-
+    this.isLogin = Boolean(localStorage.getItem("isLogin"));
 
   }
 
   ngOnInit(): void {
+    if (this.isLogin == true) {
+      var info: any = document.getElementById("modal");
+    info.click();
+    var form = document.getElementsByClassName('needs-validation')[0] as HTMLFormElement;
+    form.addEventListener('submit', function(event) {
+      if (form.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    }, false);
     this.buscarFacultad();
+    }else{
+      this.zone.run(() => {
+        this.router.navigate(['/index']);
+      });
+    }
+    
   }
 
   onSelect(val: any) {
@@ -45,6 +64,14 @@ export class MateriaComponent implements OnInit {
   creaCarpeta() {
     let materia = this.form.get("materia")?.value;
     let grupo = this.form.get("grupo")?.value;
+    if (materia == null || materia == "" || this.IdFacultad==null || this.IdProyecto==null || grupo == null || grupo == "") {
+      Swal.fire({
+        title: 'Error',
+        text: 'Verifique la información ingresada',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      })
+    } else {
     this.fileMetadata = {
       'name': materia + '-' + grupo,
       'mimeType': 'application/vnd.google-apps.folder',
@@ -74,6 +101,7 @@ export class MateriaComponent implements OnInit {
           });
         }
       }, (err: any) => { console.error("Execute error", err); })
+    }
 
   }
 
@@ -110,6 +138,36 @@ export class MateriaComponent implements OnInit {
       // TODO(developer) - Handle error
       throw err;
     }
+  }
+
+  navFacultad(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_facultad']);
+    });
+  }
+
+  navProyecto(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_proyecto']);
+    });
+  }
+
+  navMateria(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_materia']);
+    });
+  }
+
+  navClase(){
+    this.zone.run(() => {
+      this.router.navigate(['/registrar_clase']);
+    });
+  }
+
+  navBitacora(){
+    this.zone.run(() => {
+      this.router.navigate(['/generar_bitacora']);
+    });
   }
 
 }
