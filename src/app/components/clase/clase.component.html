@@ -1,8 +1,8 @@
 <main>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/menu">
-                <img width="30" height="24" class="d-inline-block align-text-top" src="./assets/imgs/navbar.png"
+            <a class="navbar-brand" (click)="navMenu()">
+                <img width="35" height="30" class="d-inline-block align-text-top" src="./assets/imgs/navbar.png"
                     alt=""></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -36,196 +36,227 @@
         </div>
     </nav>
     <section class="menu">
-        <div class="contenedor">
+        <div class="contenedor" style="padding-bottom: 20px;">
             <h2 class="titulo" style="margin-bottom: 20px;">Registrar Clase</h2>
             <div style="text-align: center; margin-bottom: 20px;">
                 <!-- Button trigger modal -->
                 <button type="button" id="modal" class="btn btn-primary"
                     style="border-radius: 20px; opacity: 70%; cursor: alias; font-size: 18px; text-decoration: underline; border-color: black;"
                     data-toggle="modal" data-target=".bd-example-modal-lg">Información</button>
-            </div>
-            <div class="formulario" style="width: 80%;">
-                <form [formGroup]="form" (ngSubmit)="registrarClase()" class="needs-validation" novalidate>
-                    <div class="card-body" style="text-align: center;">
-                        <h5 style="padding-top: 5px; padding-bottom: 5px;" class="titulo-forms"
-                            for="validationCustom01">Facultad</h5>
-                        <select id="validationCustom01" class="custom-select" style="width: 80%;"
-                            (change)='onSelect(val.value)' #val required>
-                            <option value="">--Seleccione Facultad--</option>
-                            <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}
-                            </option>
-                        </select>
-                        <div class="invalid-feedback">
-                            {{alertaFormulario}}
-                        </div>
-                        <br>
-                        <h5 style="padding-top: 5px; padding-bottom: 5px;" class="titulo-forms"
-                            for="validationCustom02">Proyecto Curricular</h5>
-                        <select id="validationCustom02" class="custom-select" style="width: 80%;"
-                            (change)='onSelectP(valP.value)' #valP required>
-                            <option value="">--Seleccione Proyecto--</option>
-                            <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">
-                                {{filesP[i].name}}</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            {{alertaFormulario}}
-                        </div>
-                        <br>
-                        <h5 class="titulo-forms" style="padding-top: 10px;" for="validationCustom03">Asignatura</h5>
-                        <select id="validationCustom03" class="custom-select" style="width: 80%;"
-                            (change)='onSelectM(valM.value)' #valM required>
-                            <option value="">--Seleccione Asignatura--</option>
-                            <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">
-                                {{filesM[i].name}}</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            {{alertaFormulario}}
-                        </div>
-                        <br>
-                        <h5 class="titulo-forms" style="padding-top: 10px;">Fecha </h5>
-                        <div class="centrar-general">
-                            <input class="form-control decoration-inputs" style="width: 40%;" formControlName="clase"
-                                type="date" id="validationCustom04" name="trip-start" min="2022-01-01" max="2025-12-31"
-                                required>
-                        </div>
-
-                        <div class="invalid-feedback">
-                            {{alertaFormulario}}
-                        </div>
-                        <br>
-                        <h5 class="titulo-forms" style="padding-top: 10px;">Horario</h5>
-                        <table class="centrar-general" style="padding-top: 0px;">
-                            <tr>
-                                <td style="padding: 20px;">
-                                    <label style="padding-right: 10px;"> Inicio </label>
-                                    <input id="validationCustom05" class="decoration-inputs form-control"
-                                        formControlName="inicio" type="time" value="06:00 am" required>
-                                    <div class="invalid-feedback">
-                                        {{alertaFormulario}}
-                                    </div>
-                                    <br>
-                                </td>
-                                <td style="padding: 20px;">
-                                    <label style="padding-right: 10px; padding-left: 10px;"> Fin </label>
-                                    <input id="validationCustom06" class="decoration-inputs form-control"
-                                        formControlName="fin" type="time" value='06:00 pm' required>
-                                    <div class="invalid-feedback">
-                                        {{alertaFormulario}}
-                                    </div>
-                                    <br>
-                                </td>
-                            </tr>
-                        </table>
-
-                        <h5 class="titulo-forms" style="padding-top: 10px;">Descripción</h5>
-                        <div class="centrar-general">
-                            <textarea id="validationCustom07" formControlName="texto" name="" id="" rows="10"
-                                class="decoration-inputs form-control" style="width: 80%;" required></textarea>
-                        </div>
-                        <div class="invalid-feedback">
-                            {{alertaFormulario}}
-                        </div>
-                        <br>
-
-                        <h5 class="titulo-forms" style="padding-top: 10px;">Anexos</h5>
-                        <!-- Modal -->
-                        <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"
-                            aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <section class="contenedor sobre-nosotros">
-                                        <h2 class="titulo">Registrar Clase</h2>
-                                        <div class="contenedor-sobre-nosotros">
-                                            <img src="./assets/imgs/ilustracion2.svg" alt="" class="imagen-about-us">
-                                            <div class="contenido-textos">
-                                                <h3><span>1</span>Resumen</h3>
-                                                <p>Por medio de la siguiente pantalla se podran introducir y
-                                                    seleccionar los datos necesarios para realizar el registro de
-                                                    actividades llevadas acabo en una sesion de clase, completando
-                                                    los campos especificados a continuacion, los cuales se alimentan
-                                                    de los directorios creados en el drive del docente.</p>
-                                                <h3><span>2</span>Guía rápida</h3>
-                                                <p>1. Seleccione la Facultad.<br>
-                                                    2. Seleccione el Proyecto Curricular.<br>
-                                                    3. Seleccione la Materia de la cual registrará la clase.<br>
-                                                    4. Seleccione la fecha y hora de la sesión de clase.<br>
-                                                    5. Realice una breve descripción de las actividades realizadas
-                                                    durante la sesión de clase<br>
-                                                    6. Si cuenta con listados, presentaciones, o contenido
-                                                    multimedia que haya utilizado como ayuda para realizar la sesión
-                                                    puede añadir la información correspondiente con los enlaces de
-                                                    acceso en el campo de "Anexos".
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </section>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary"
-                                            data-dismiss="modal">Aceptar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="padding-bottom: 10px;">
-                            <textarea name="" id="validationCustom08" formControlName="anexos" rows="5"
-                                class="decoration-inputs" style="width: 60%; " readonly="true" required></textarea>
-                            <div class="invalid-feedback">
-                                {{alertaFormulario}}
-                            </div>
-                            <br>
-                        </div>
-                        <div><button type="button" class="button4" data-toggle="modal" data-target="#exampleModalCenter"
-                                (click)="buscarAnexos()"
-                                style="margin-bottom: 20px; border-radius: 30px; margin-right: 10px;">
-                                Agregar Enlace
-                            </button>
-                            <button type="button" class="button4" (click)="limpiarAnexos()"
-                                style="margin-bottom: 20px; border-radius: 30px;">
-                                Limpiar Anexos
-                            </button>
-                        </div>
-                        <button class="button4" style=" border-color: black;">
-                            REGISTRAR CLASE
-                        </button>
-                    </div>
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLongTitle">ANEXOS</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div>
-                                        <div style="padding-bottom: 10px;">
-                                            <div class="titulo-forms">Nombre</div>
-                                            <input type="text" class="decoration-inputs" formControlName="nombreAnexo">
-                                            <select class="decoration-inputs" style="width: 60%;" [(ngModel)]="anexos"
-                                                [ngModelOptions]="{standalone: true}" (change)='onSelectA(valA.value)'
-                                                #valA>
-                                                <option disabled value="null">--Seleccione Recurso--</option>
-                                                <option *ngFor="let file of filesA; let i= index"
-                                                    [value]="filesA[i].id">
-                                                    {{filesA[i].name}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal"
-                                        (click)="agregarAnexo()">Agregar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                    <button type="button" id="modal" class="btn btn-primary"
+                    style="border-radius: 20px; opacity: 70%; font-size: 18px; border-color: black; margin-left: 10px; text-decoration: underline" 
+                    (click)="navMenu()">Volver</button>
             </div>
         </div>
+        <div style="padding-bottom: 20px;">
+            <table class="tabla">
+                <tr>
+                    <td>
+                        <div class="formulario" style="width: 100%;">
+                            <form [formGroup]="form" (ngSubmit)="actualizarVista()" class="needs-validation" novalidate>
+                                <div class="card-body" style="text-align: center;">
+                                    <h5 style="padding-top: 5px; padding-bottom: 5px;" class="titulo-forms"
+                                        for="validationCustom01">Facultad</h5>
+                                    <select id="validationCustom01" class="custom-select" style="width: 80%;"
+                                        (change)='onSelect(val.value)' #val required>
+                                        <option value="">--Seleccione Facultad--</option>
+                                        <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}
+                                        </option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        {{alertaFormulario}}
+                                    </div>
+                                    <br>
+                                    <h5 style="padding-top: 5px; padding-bottom: 5px;" class="titulo-forms"
+                                        for="validationCustom02">Proyecto Curricular</h5>
+                                    <select id="validationCustom02" class="custom-select" style="width: 80%;"
+                                        (change)='onSelectP(valP.value)' #valP required>
+                                        <option value="">--Seleccione Proyecto--</option>
+                                        <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">
+                                            {{filesP[i].name}}</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        {{alertaFormulario}}
+                                    </div>
+                                    <br>
+                                    <h5 class="titulo-forms" style="padding-top: 10px;" for="validationCustom03">Asignatura</h5>
+                                    <select id="validationCustom03" class="custom-select" style="width: 80%;"
+                                        (change)='onSelectM(valM.value)' #valM required>
+                                        <option value="">--Seleccione Asignatura--</option>
+                                        <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">
+                                            {{filesM[i].name}}</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        {{alertaFormulario}}
+                                    </div>
+                                    <br>
+                                    <h5 class="titulo-forms" style="padding-top: 10px;">Fecha </h5>
+                                    <div class="centrar-general">
+                                        <input class="form-control decoration-inputs" style="width: 40%;" formControlName="clase"
+                                            type="date" id="validationCustom04" name="trip-start" min="2022-01-01" max="2025-12-31"
+                                            required>
+                                    </div>
+            
+                                    <div class="invalid-feedback">
+                                        {{alertaFormulario}}
+                                    </div>
+                                    <br>
+                                    <h5 class="titulo-forms" style="padding-top: 10px;">Horario</h5>
+                                    <table class="centrar-general" style="padding-top: 0px;">
+                                        <tr>
+                                            <td style="padding: 20px;">
+                                                <label style="padding-right: 10px;"> Inicio </label>
+                                                <input id="validationCustom05" class="decoration-inputs form-control"
+                                                    formControlName="inicio" type="time" value="06:00 am" required>
+                                                <div class="invalid-feedback">
+                                                    {{alertaFormulario}}
+                                                </div>
+                                                <br>
+                                            </td>
+                                            <td style="padding: 20px;">
+                                                <label style="padding-right: 10px; padding-left: 10px;"> Fin </label>
+                                                <input id="validationCustom06" class="decoration-inputs form-control"
+                                                    formControlName="fin" type="time" value='06:00 pm' required>
+                                                <div class="invalid-feedback">
+                                                    {{alertaFormulario}}
+                                                </div>
+                                                <br>
+                                            </td>
+                                        </tr>
+                                    </table>
+            
+                                    <h5 class="titulo-forms" style="padding-top: 10px;">Descripción</h5>
+                                    <div class="centrar-general">
+                                        <textarea id="validationCustom07" formControlName="texto" name="" id="" rows="10"
+                                            class="decoration-inputs form-control" style="width: 80%;" required></textarea>
+                                    </div>
+                                    <div class="invalid-feedback">
+                                        {{alertaFormulario}}
+                                    </div>
+                                    <br>
+            
+                                    <h5 class="titulo-forms" style="padding-top: 10px;">Anexos</h5>
+                                    
+                                    <div style="padding-bottom: 10px;">
+                                        <textarea name="" id="validationCustom08" formControlName="anexos" rows="5"
+                                            class="decoration-inputs" style="width: 60%; " readonly="true" required></textarea>
+                                        <div class="invalid-feedback">
+                                            {{alertaFormulario}}
+                                        </div>
+                                        <br>
+                                    </div>
+                                    <div><button type="button" class="button4" data-toggle="modal" data-target="#exampleModalCenter"
+                                            (click)="buscarAnexos()"
+                                            style="margin-bottom: 20px; border-radius: 30px; margin-right: 10px;">
+                                            Agregar Enlace
+                                        </button>
+                                        <button type="button" class="button4" (click)="limpiarAnexos()"
+                                            style="margin-bottom: 20px; border-radius: 30px;">
+                                            Limpiar Anexos
+                                        </button>
+                                    </div>
+                                    <button class="button4" style=" border-color: black;">
+                                        REGISTRAR CLASE
+                                    </button>
+                                </div>
+                                <!-- Modal -->
+        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">ANEXOS</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div style="padding-bottom: 10px;">
+                            <div class="titulo-forms">Nombre</div>
+                            <input type="text" class="decoration-inputs" formControlName="nombreAnexo">
+                            <select class="decoration-inputs" style="width: 60%;" [(ngModel)]="anexos"
+                                [ngModelOptions]="{standalone: true}" (change)='onSelectA(valA.value)'
+                                #valA>
+                                <option disabled value="null">--Seleccione Recurso--</option>
+                                <option *ngFor="let file of filesA; let i= index"
+                                    [value]="filesA[i].id">
+                                    {{filesA[i].name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"
+                        (click)="agregarAnexo()">Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="formulario" style="width: 100%;">
+                            <div>
+                                <h5 style="padding-top: 5px; padding-bottom: 5px; text-align: center;" class="titulo-forms">Vista Previa</h5>
+                                <iframe width="640" height="1040" allow="autoplay" id="vistaP"></iframe>
+                            </div>
+                            <div style="text-align: center; visibility: hidden;" id="botones" >
+                            <button class="button4" style="margin-bottom: 20px; border-radius: 30px; margin-right: 10px;" (click)="guardarYSalir()">
+                                Guardar y Salir
+                            </button>
+                            <button class="button4" style="margin-bottom: 20px; border-radius: 30px;" (click)="salirSinGuardar()">
+                                Salir sin Guardar
+                            </button>
+                        </div>
+                           
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+            
+        
+        <!-- Modal -->
+        <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <section class="contenedor sobre-nosotros">
+                    <h2 class="titulo">Registrar Clase</h2>
+                    <div class="contenedor-sobre-nosotros">
+                        <img src="./assets/imgs/ilustracion2.svg" alt="" class="imagen-about-us">
+                        <div class="contenido-textos">
+                            <h3><span>1</span>Resumen</h3>
+                            <p>Por medio de la siguiente pantalla se podran introducir y
+                                seleccionar los datos necesarios para realizar el registro de
+                                actividades llevadas acabo en una sesion de clase, completando
+                                los campos especificados a continuacion, los cuales se alimentan
+                                de los directorios creados en el drive del docente.</p>
+                            <h3><span>2</span>Guía rápida</h3>
+                            <p>1. Seleccione la Facultad.<br>
+                                2. Seleccione el Proyecto Curricular.<br>
+                                3. Seleccione la Materia de la cual registrará la clase.<br>
+                                4. Seleccione la fecha y hora de la sesión de clase.<br>
+                                5. Realice una breve descripción de las actividades realizadas
+                                durante la sesión de clase<br>
+                                6. Si cuenta con listados, presentaciones, o contenido
+                                multimedia que haya utilizado como ayuda para realizar la sesión
+                                puede añadir la información correspondiente con los enlaces de
+                                acceso en el campo de "Anexos".
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"
+                        data-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        
     </section>
 
 </main>

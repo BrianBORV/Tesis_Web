@@ -31,6 +31,7 @@ export class BitacoraComponent implements OnInit {
   map: any;
   alertaFormulario:string = "Por favor diligencie este campo";
   isLogin: boolean;
+  vistaPrevia: any;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
@@ -46,8 +47,11 @@ export class BitacoraComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isLogin ==true) {
-      var info: any = document.getElementById("modal");
-    info.click();
+      if(localStorage.getItem("InfoB")!="1"){
+        var info: any = document.getElementById("modal");
+      info.click();
+      localStorage.setItem("InfoB", "1");
+      }
     var form = document.getElementsByClassName('needs-validation')[0] as HTMLFormElement;
     form.addEventListener('submit', function(event) {
       if (form.checkValidity() === false) {
@@ -453,6 +457,16 @@ export class BitacoraComponent implements OnInit {
   }
 
   generarBitacora() {
+    Swal.fire({
+      icon:'info',
+      title: 'Por favor espere',
+      html: `Generando Bitácora`,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      willOpen: () => {
+          Swal.showLoading()
+        },
+    });
     var periodo = this.form.get("periodo")?.value;
     var inicio = this.form.get("inicio")?.value;
     var fin = this.form.get("fin")?.value;
@@ -1239,19 +1253,15 @@ export class BitacoraComponent implements OnInit {
                   } while (i < filesId.length);
                   console.log("actualizado")
                   console.log("Bitacora generada exitosamente")
-                }).then((response: any) => {
-                  this.completarBitacora(inicio,fin, nombre);
-                  this.encabezadoBitacora();
-                  this.guardarArchivos();
+                }).then(async (response: any) => {
+                  await this.completarBitacora(inicio,fin, nombre);
+                  await this.encabezadoBitacora();
+                  this.vistaPrev();
                   Swal.fire({
                     title: 'Informe Generado',
-                    text: 'El informe de la asignatura ' + this.nombreMateria + ' se ha generado correctamente',
+                    text: 'El informe de la asignatura ' + this.nombreMateria + ' se ha generado correctamente, por favor validar el informe y hacer click en aceptar para guardarlo.',
                     icon: 'success',
                     confirmButtonText: 'Aceptar'
-                  }).then((result) => {
-                    this.zone.run(() => {
-                      this.router.navigate(['/menu']);
-                    });
                   })
 
                 })
@@ -1461,35 +1471,17 @@ export class BitacoraComponent implements OnInit {
 
   }
 
-  async descargarBitacora() {
-    let fileName = this.nombreBitacora;
-    try {
-      await gapi.client.drive.files.export({
-        fileId: this.IdBitacora,
-        mimeType: 'application/vnd.oasis.opendocument.text',
-      })
-        .then((response: any) => {
-          console.log(response);
-          var datatype = "application/vnd.oasis.opendocument.text;data:text/plain;charset=ANSI";
-          var binaryData = [];
-          binaryData.push(response.body);
-
-          var filePath = window.URL.createObjectURL(new Blob(binaryData, { type: datatype }));
-          var downloadLink = document.createElement('a');
-          downloadLink.href = filePath;
-          console.log(downloadLink);
-          downloadLink.setAttribute('download', fileName);
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-        }, (err: any) => { console.error("Execute error", err); })
-    } catch (err) {
-      // TODO(developer) - Handle error
-      throw err;
-    }
-  }
-
   async guardarArchivos() {
-    let periodo = this.form.get("periodo")?.value;
+    Swal.fire({
+      title: 'Confirmación',
+      text: '¿Está seguro de guardar la bitácora actual? Recuerde que una vez guardada los archivos se transferirán y la bitácora no podrá ser editada.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar'
+    }).then(async (res)=>{
+      if (res.value) {
+        let periodo = this.form.get("periodo")?.value;
     var folderId: any;
     var fileMetadata = {
       'name': periodo,
@@ -1539,6 +1531,24 @@ export class BitacoraComponent implements OnInit {
           index++;
         } while (index < filesId.length)
       })
+      Swal.fire({
+        title: 'Bitácora Guardada',
+        text: 'La bitácora generada se ha guardado correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      }).then(()=>{
+        this.zone.run(() => {
+          this.router.navigate(['/menu']);
+        });
+      })
+      }
+    })
+  }
+
+  navMenu(){
+    this.zone.run(() => {
+      this.router.navigate(['/menu']);
+    });
   }
 
   navFacultad(){
@@ -1569,6 +1579,45 @@ export class BitacoraComponent implements OnInit {
     this.zone.run(() => {
       this.router.navigate(['/generar_bitacora']);
     });
+  }
+
+  vistaPrev(){
+    this.vistaPrevia="https://drive.google.com/file/d/"+this.IdBitacora+"/preview";
+    document.getElementById('vistaP')?.setAttribute("src", this.vistaPrevia);
+    document.getElementById('botones')?.setAttribute("style","text-align: center; visibility: visible;" );
+  }
+
+  editarDoc(){
+    gapi.client.drive.files.delete({
+      "fileId": this.IdBitacora
+    }).then(() => { 
+      document.getElementById('botones')?.setAttribute("style","text-align: center; visibility: hidden;" );
+      Swal.fire({
+        title: 'Editando Registro',
+        text: 'Por favor edite los campos que desee en el formulario y continuación de click en "GENERAR BITACORA".',
+        icon: 'info',
+        confirmButtonText: 'Aceptar',
+        timerProgressBar: true,
+        willOpen() {
+          Swal.showLoading();
+        },
+      })
+    })
+  }
+
+  eliminarDoc(){
+    gapi.client.drive.files.delete({
+      "fileId": this.IdBitacora
+    }).then(() => { 
+      document.getElementById('vistaP')?.setAttribute("src", "");
+      document.getElementById('botones')?.setAttribute("style","text-align: center; visibility: hidden;" );
+      Swal.fire({
+        title: 'Registro Eliminado',
+        text: 'El documento se ha eliminado exitosamente.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      })
+    })
   }
 
 }

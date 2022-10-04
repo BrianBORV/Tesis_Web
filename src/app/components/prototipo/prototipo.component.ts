@@ -24,9 +24,12 @@ export class PrototipoComponent implements AfterViewInit {
 
   ngOnInit() {
     if (this.isLogin == true) {
-      var info: any = document.getElementById("modal");
+      if(localStorage.getItem("InfoM")!="1"){
+        var info: any = document.getElementById("modal");
       info.click();
-    }else{
+      localStorage.setItem("InfoM", "1");
+      }
+      }else{
       this.zone.run(() => {
         this.router.navigate(['/index']);
       });
@@ -63,15 +66,6 @@ export class PrototipoComponent implements AfterViewInit {
       gapi.load('client:auth2', this.initClient);
     }
 
-  }
-
-  login() {
-    gapi.auth2.getAuthInstance().signIn();
-    this.isLogin = gapi.auth2.getAuthInstance().isSignedIn.get();
-    localStorage.setItem("isLogin", String(this.isLogin));
-    console.log(this.isLogin);
-    gapi.auth2.getAuthInstance().signIn().then(this.mostrarOpciones());
-    this.gapiServ.updateGapi(gapi);
   }
 
   verificarCarpetaPadre() {
@@ -139,6 +133,12 @@ export class PrototipoComponent implements AfterViewInit {
     localStorage.removeItem('isLogin');
     localStorage.removeItem('IdBitacora');
     localStorage.removeItem('IdRecursos');
+    localStorage.removeItem("InfoM");
+    localStorage.removeItem("InfoC");
+    localStorage.removeItem("InfoMat");
+    localStorage.removeItem("InfoP");
+    localStorage.removeItem("InfoF");
+    localStorage.removeItem("InfoB");
     this.gapiServ.updateGapi(gapi);
     console.log(localStorage);
     Swal.fire({
@@ -146,11 +146,11 @@ export class PrototipoComponent implements AfterViewInit {
       text: 'Sesión cerrada correctamente',
       icon: 'success',
       confirmButtonText: 'Aceptar'
+    }).then((result) => {
+      this.zone.run(() => {
+        this.router.navigate(['/index']);
+      });
     })
-    this.zone.run(() => {
-      this.router.navigate(['/index']);
-    });
-
   }
 
 }

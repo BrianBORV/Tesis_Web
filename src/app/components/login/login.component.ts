@@ -65,6 +65,12 @@ export class LoginComponent implements AfterViewInit {
     console.log(this.isLogin);
     gapi.auth2.getAuthInstance().signIn().then(this.mostrarOpciones());
     this.gapiServ.updateGapi(gapi);
+    localStorage.setItem("InfoM","0");
+    localStorage.setItem("InfoF","0");
+    localStorage.setItem("InfoP","0");
+    localStorage.setItem("InfoMat","0");
+    localStorage.setItem("InfoC","0");
+    localStorage.setItem("InfoB","0");
   }
 
   async verificarCarpetaPadre() {

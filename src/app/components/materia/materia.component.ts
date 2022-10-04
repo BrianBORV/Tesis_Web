@@ -33,8 +33,11 @@ export class MateriaComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isLogin == true) {
-      var info: any = document.getElementById("modal");
-    info.click();
+      if(localStorage.getItem("InfoMat")!="1"){
+        var info: any = document.getElementById("modal");
+      info.click();
+      localStorage.setItem("InfoMat", "1");
+      }
     var form = document.getElementsByClassName('needs-validation')[0] as HTMLFormElement;
     form.addEventListener('submit', function(event) {
       if (form.checkValidity() === false) {
@@ -138,6 +141,12 @@ export class MateriaComponent implements OnInit {
       // TODO(developer) - Handle error
       throw err;
     }
+  }
+
+  navMenu(){
+    this.zone.run(() => {
+      this.router.navigate(['/menu']);
+    });
   }
 
   navFacultad(){

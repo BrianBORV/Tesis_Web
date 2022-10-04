@@ -18,19 +18,24 @@ export class ProyectoCComponent implements OnInit {
   IdFacultad: any = null;
   alertaFormulario:string = "Por favor diligencie este campo";
   isLogin: boolean;
+  valInfo:any;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
       proyecto: ['', [Validators.required]]
     });
     this.isLogin = Boolean(localStorage.getItem("isLogin"));
+    
 
   }
 
   ngOnInit(): void {
     if (this.isLogin == true) {
-      var info: any = document.getElementById("modal");
-    info.click();
+      if(localStorage.getItem("InfoP")!="1"){
+        var info: any = document.getElementById("modal");
+      info.click();
+      localStorage.setItem("InfoP", "1");
+      }
     var form = document.getElementsByClassName('needs-validation')[0] as HTMLFormElement;
     form.addEventListener('submit', function(event) {
       if (form.checkValidity() === false) {
@@ -120,6 +125,13 @@ export class ProyectoCComponent implements OnInit {
       
     }
   }
+
+  navMenu(){
+    this.zone.run(() => {
+      this.router.navigate(['/menu']);
+    });
+  }
+
   navFacultad(){
     this.zone.run(() => {
       this.router.navigate(['/registrar_facultad']);

@@ -28,6 +28,7 @@ export class ClaseComponent implements OnInit {
   listaRec: string[] = [];
   alertaFormulario:string = "Por favor diligencie este campo";
   isLogin: boolean;
+  vistaPrevia:any;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private zone: NgZone) {
     this.form = this.formBuilder.group({
@@ -44,8 +45,11 @@ export class ClaseComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isLogin ==true) {
-      var info: any = document.getElementById("modal");
-    info.click();
+      if(localStorage.getItem("InfoC")!="1"){
+        var info: any = document.getElementById("modal");
+      info.click();
+      localStorage.setItem("InfoC", "1");
+      }
     var form = document.getElementsByClassName('needs-validation')[0] as HTMLFormElement;
     form.addEventListener('submit', function(event) {
       if (form.checkValidity() === false) {
@@ -99,15 +103,20 @@ export class ClaseComponent implements OnInit {
     }
   }
 
-  registrarClase() {
-    let clase = this.form.get("clase")?.value;
-    let inicio = this.form.get("inicio")?.value;
-    let fin = this.form.get("fin")?.value;
-    let texto = this.form.get("texto")?.value;
-    let anexos = this.form.get("anexos")?.value.toString();
-    let requestTabla: any[] = [];
-    let requestTextoT: any[] = [];
-    if (clase == null || clase == "" || this.IdFacultad==null || this.IdProyecto==null || this.IdMateria==null|| inicio == null || fin== null || texto==null || texto=="") {
+  actualizarVista(){
+    let clase:any = {
+      nombre: "",
+      inicio: "",
+      fin: "",
+      texto: "",
+      anexos:""
+    };
+    clase.nombre = this.form.get("clase")?.value;
+    clase.inicio = this.form.get("inicio")?.value;
+    clase.fin = this.form.get("fin")?.value;
+    clase.texto = this.form.get("texto")?.value;
+    clase.anexos = this.form.get("anexos")?.value.toString();
+    if (clase.nombre == null || clase.nombre == "" || this.IdFacultad==null || this.IdProyecto==null || this.IdMateria==null|| clase.inicio == null || clase.fin== null || clase.texto==null || clase.texto=="") {
       Swal.fire({
         title: 'Error',
         text: 'Verifique la información ingresada',
@@ -115,6 +124,39 @@ export class ClaseComponent implements OnInit {
         confirmButtonText: 'Aceptar'
       })
     } else {
+      gapi.client.drive.files.list({
+        "q": "name='" + clase + "' and '" + this.IdMateria + "' in parents"
+      })
+        .then((response: any) => {
+          // Handle the results here (response.result has the parsed body).
+          if (response.result.files.length == 0) {
+            this.registrarClase(clase);
+          }else{
+            this.IdClase = response.result.files[0].id;
+          gapi.client.drive.files.delete({
+            "fileId": this.IdClase
+          }).then(() => { 
+            this.registrarClase(clase);
+          })
+          }
+      }, (err: any) => { console.error("Execute error", err); })
+
+    }
+  }
+
+  registrarClase(clase:any) {
+    Swal.fire({
+      icon:'info',
+      title: 'Por favor espere',
+      html: `Registrando Clase`,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      willOpen: () => {
+          Swal.showLoading()
+        },
+    });
+    let requestTabla: any[] = [];
+    let requestTextoT: any[] = [];
     requestTabla = [
       {
         "insertTable": {
@@ -246,7 +288,7 @@ export class ClaseComponent implements OnInit {
       },
       {
         "replaceAllText": {
-          "replaceText": clase,
+          "replaceText": clase.nombre,
           "containsText": {
             "text": "{{FECHA}}"
           }
@@ -254,7 +296,7 @@ export class ClaseComponent implements OnInit {
       },
       {
         "replaceAllText": {
-          "replaceText": inicio + " a " + fin,
+          "replaceText": clase.inicio + " a " + clase.fin,
           "containsText": {
             "text": "{{HORARIO}}"
           }
@@ -262,7 +304,7 @@ export class ClaseComponent implements OnInit {
       },
       {
         "replaceAllText": {
-          "replaceText": texto,
+          "replaceText": clase.texto,
           "containsText": {
             "text": "{{TEXTO}}"
           }
@@ -270,7 +312,7 @@ export class ClaseComponent implements OnInit {
       },
       {
         "replaceAllText": {
-          "replaceText": anexos,
+          "replaceText": clase.anexos,
           "containsText": {
             "text": "{{ANEXOS}}"
           }
@@ -282,156 +324,142 @@ export class ClaseComponent implements OnInit {
       'mimeType': 'application/vnd.google-apps.document',
       'parents': [this.IdMateria]
     };
-    gapi.client.drive.files.list({
-      "q": "name='" + clase + "' and '" + this.IdMateria + "' in parents"
-    })
-      .then((response: any) => {
-        // Handle the results here (response.result has the parsed body).
-        if (response.result.files.length == 0) {
-          gapi.client.drive.files.create({
-            resource: this.fileMetadata,
-            fields: 'id'
-          }).then(async (response: any) => {
-            this.IdClase = response.result.id;
-            await gapi.client.docs.documents.batchUpdate({
-              "documentId": response.result.id,
-              "resource": {
-                "requests": requestTabla
-              }
-            })
-            await gapi.client.docs.documents.get({
-              "documentId": this.IdClase
-            })
-              .then(async (response4: any) => {
-                var body = response4.result.body;
-                requestTextoT = [
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 5
-                      },
-                      "text": "Asignatura:"
-                    }
-                  },
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 18
-                      },
-                      "text": "{{MATERIA}}"
-                    }
-                  },
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 33
-                      },
-                      "text": "Grupo:"
-                    }
-                  },
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 41
-                      },
-                      "text": "{{Grupo}}"
-                    }
-                  },
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 53
-                      },
-                      "text": "Fecha Sesión:"
-                    }
-                  },
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 68
-                      },
-                      "text": "{{FECHA}}"
-                    }
-                  },
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 79
-                      },
-                      "text": "Horario:"
-                    }
-                  },
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 89
-                      },
-                      "text": "{{HORARIO}}"
-                    }
-                  },
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 105
-                      },
-                      "text": "DESCRIPCIÓN DE LA UNIDAD Y ACTIVIDADES"
-                    }
-                  },
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 162
-                      },
-                      "text": "{{TEXTO}}"
-                    }
-                  },
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 174
-                      },
-                      "text": "ANEXOS"
-                    }
-                  },
-                  {
-                    "insertText": {
-                      "location": {
-                        "index": 191
-                      },
-                      "text": "{{ANEXOS}}"
-                    }
-                  }
-                ]
-                await gapi.client.docs.documents.batchUpdate({
-                  "documentId": this.IdClase,
-                  "resource": {
-                    "requests": requestTextoT
-                  }
-                }).then((response4: any) => { console.log("base añadida") })
-              })
-            await gapi.client.docs.documents.batchUpdate({
-              "documentId": this.IdClase,
-              "resource": {
-                "requests": request2
-              }
-            })
-            this.estiloClase();
-            Swal.fire({
-              title: 'Registro Creado',
-              text: 'El registro de la clase se ha creado correctamente',
-              icon: 'success',
-              confirmButtonText: 'Aceptar'
-            }).then((result) => {
-              this.zone.run(() => {
-                this.router.navigate(['/menu']);
-              });
-            })
-
-
-          });
+    gapi.client.drive.files.create({
+      resource: this.fileMetadata,
+      fields: 'id'
+    }).then(async (response: any) => {
+      this.IdClase = response.result.id;
+      await gapi.client.docs.documents.batchUpdate({
+        "documentId": response.result.id,
+        "resource": {
+          "requests": requestTabla
         }
-      }, (err: any) => { console.error("Execute error", err); })
-    }
+      })
+      await gapi.client.docs.documents.get({
+        "documentId": this.IdClase
+      })
+        .then(async (response4: any) => {
+          var body = response4.result.body;
+          requestTextoT = [
+            {
+              "insertText": {
+                "location": {
+                  "index": 5
+                },
+                "text": "Asignatura:"
+              }
+            },
+            {
+              "insertText": {
+                "location": {
+                  "index": 18
+                },
+                "text": "{{MATERIA}}"
+              }
+            },
+            {
+              "insertText": {
+                "location": {
+                  "index": 33
+                },
+                "text": "Grupo:"
+              }
+            },
+            {
+              "insertText": {
+                "location": {
+                  "index": 41
+                },
+                "text": "{{Grupo}}"
+              }
+            },
+            {
+              "insertText": {
+                "location": {
+                  "index": 53
+                },
+                "text": "Fecha Sesión:"
+              }
+            },
+            {
+              "insertText": {
+                "location": {
+                  "index": 68
+                },
+                "text": "{{FECHA}}"
+              }
+            },
+            {
+              "insertText": {
+                "location": {
+                  "index": 79
+                },
+                "text": "Horario:"
+              }
+            },
+            {
+              "insertText": {
+                "location": {
+                  "index": 89
+                },
+                "text": "{{HORARIO}}"
+              }
+            },
+            {
+              "insertText": {
+                "location": {
+                  "index": 105
+                },
+                "text": "DESCRIPCIÓN DE LA UNIDAD Y ACTIVIDADES"
+              }
+            },
+            {
+              "insertText": {
+                "location": {
+                  "index": 162
+                },
+                "text": "{{TEXTO}}"
+              }
+            },
+            {
+              "insertText": {
+                "location": {
+                  "index": 174
+                },
+                "text": "ANEXOS"
+              }
+            },
+            {
+              "insertText": {
+                "location": {
+                  "index": 191
+                },
+                "text": "{{ANEXOS}}"
+              }
+            }
+          ]
+          await gapi.client.docs.documents.batchUpdate({
+            "documentId": this.IdClase,
+            "resource": {
+              "requests": requestTextoT
+            }
+          }).then((response4: any) => { console.log("base añadida") })
+        })
+      await gapi.client.docs.documents.batchUpdate({
+        "documentId": this.IdClase,
+        "resource": {
+          "requests": request2
+        }
+      })
+      await this.estiloClase();
+      this.vistaPrev();
+      Swal.fire({
+        title: 'Registro Creado',
+        text: 'El registro de la clase se ha realizado correctamente',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      })
+    });
   }
 
   async buscarProyecto() {
@@ -956,6 +984,12 @@ export class ClaseComponent implements OnInit {
     this.form.controls['anexos'].setValue();
   }
 
+  navMenu(){
+    this.zone.run(() => {
+      this.router.navigate(['/menu']);
+    });
+  }
+
   navFacultad(){
     this.zone.run(() => {
       this.router.navigate(['/registrar_facultad']);
@@ -984,6 +1018,46 @@ export class ClaseComponent implements OnInit {
     this.zone.run(() => {
       this.router.navigate(['/generar_bitacora']);
     });
+  }
+
+  vistaPrev(){
+    this.vistaPrevia="https://drive.google.com/file/d/"+this.IdClase+"/preview";
+    document.getElementById('vistaP')?.setAttribute("src", this.vistaPrevia);
+    document.getElementById('botones')?.setAttribute("style","text-align: center; visibility: visible;" );
+  }
+
+  guardarYSalir(){
+      Swal.fire({
+        title: 'Guardado',
+        text: 'El registro de la clase se ha guardado exitosamente',
+        icon: 'info',
+        confirmButtonText: 'Aceptar'
+      }).then(()=>{
+        this.zone.run(() => {
+          this.router.navigate(['/menu']);
+        });
+      })
+  }
+
+  salirSinGuardar(){
+    Swal.fire({
+      title: 'Saliendo...',
+      text: '¿Está seguro que desea salir sin guardar los cambios?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText:'Cancelar'
+    }).then((res) => { 
+      if (res.value) {
+        gapi.client.drive.files.delete({
+          "fileId": this.IdClase
+        }).then(() => { 
+          this.zone.run(() => {
+            this.router.navigate(['/menu']);
+          });
+        })
+      }
+    })
   }
 
 }

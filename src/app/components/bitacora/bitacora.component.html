@@ -1,8 +1,8 @@
 <main>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/menu">
-                <img width="30" height="24" class="d-inline-block align-text-top" src="./assets/imgs/navbar.jpg" alt=""></a>
+            <a class="navbar-brand" (click)="navMenu()">
+                <img width="35" height="30" class="d-inline-block align-text-top" src="./assets/imgs/navbar.png" alt=""></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -42,101 +42,127 @@
                 <button type="button" id="modal" class="btn btn-primary"
                     style="border-radius: 20px; opacity: 70%; cursor: alias; font-size: 18px; text-decoration: underline; border-color: black;"
                     data-toggle="modal" data-target=".bd-example-modal-lg">Información</button>
-            </div>
-            <div class="formulario">
-                <div style="text-align: center;" class="card-body">
-                    <form [formGroup]="form" (ngSubmit)="generarBitacora()" class="needs-validation" novalidate>
-                        <h5 class="titulo-forms">Nombre Completo</h5>
-                        <div>
-                            <input class="form-control" type="text" name="" id="validationCustom01"
-                                formControlName="nombre" required>
-                            <div class="invalid-feedback">
-                                {{alertaFormulario}}
-                            </div>
-                            <br>
-                        </div>
-                        <h5 class="titulo-forms">Periodo de Informe</h5>
-                        <div class="centrar-general">
-                            <div>
-                                <input class="form-control" type="text" name="" id="validationCustom02"
-                                    formControlName="periodo" required>
-                                <div class="invalid-feedback">
-                                    {{alertaFormulario}}
-                                </div>
-                            </div>
-                        </div>
-                        <table class="centrar-general">
-                            <tr>
-                                <td style="padding: 10px; text-align: center;">
-                                    <h5 class="titulo-forms"> Inicio del Periodo </h5>
-                                    <input class="decoration-inputs form-control" formControlName="inicio" type="date"
-                                        id="validationCustom03" min="2022-01-01" max="" required>
-                                    <div class="invalid-feedback">
-                                        {{alertaFormulario}}
-                                    </div>
-                                    <br>
-                                </td>
-                                <td style="padding: 10px; text-align: center;">
-                                    <h5 class="titulo-forms"> Fin del Periodo </h5>
-                                    <input class="decoration-inputs form-control" formControlName="fin" type="date"
-                                        id="validationCustom04" min="2022-01-01" max="" required>
-                                    <div class="invalid-feedback">
-                                        {{alertaFormulario}}
-                                    </div>
-                                    <br>
-                                </td>
-                            </tr>
-                        </table>
-                        <h5 style="padding-top: 5px; padding-bottom: 5px;" class="titulo-forms"
-                            for="validationCustom01">Facultad</h5>
-                        <select id="validationCustom01" class="custom-select" style="width: 80%;"
-                            (change)='onSelect(val.value)' #val required>
-                            <option value="">--Seleccione Facultad--</option>
-                            <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}
-                            </option>
-                        </select>
-                        <div class="invalid-feedback">
-                            {{alertaFormulario}}
-                        </div>
-                        <br>
-                        <h5 style="padding-top: 10px; padding-bottom: 5px;" class="titulo-forms"
-                            for="validationCustom02">Proyecto Curricular</h5>
-                        <select id="validationCustom02" class="custom-select" style="width: 80%;"
-                            (change)='onSelectP(valP.value)' #valP required>
-                            <option value="">--Seleccione Proyecto--</option>
-                            <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">
-                                {{filesP[i].name}}</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            {{alertaFormulario}}
-                        </div>
-                        <br>
-                        <h5 class="titulo-forms" style="padding-top: 10px;" for="validationCustom03">Asignatura</h5>
-                        <select id="validationCustom03" class="custom-select" style="width: 80%;"
-                            (change)='onSelectM(valM.value)' #valM required>
-                            <option value="">--Seleccione Asignatura--</option>
-                            <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">
-                                {{filesM[i].name}}</option>
-                        </select>
-                        <div class="invalid-feedback">
-                            {{alertaFormulario}}
-                        </div>
-                        <br>
-                        <br>
-                        <div class="centrar-general">
-                            <button class="button4" style=" border-color: black;">GENERAR BITACORA</button>
-                        </div>
-                    </form>
-                </div>
+                    <button type="button" id="modal" class="btn btn-primary"
+                    style="border-radius: 20px; opacity: 70%; font-size: 18px; border-color: black; margin-left: 10px; text-decoration: underline" 
+                    (click)="navMenu()">Volver</button>
             </div>
         </div>
+            <div style="padding-bottom: 20px;">
+                <table class="tabla">
+                   <tr>
+                    <td>
+                        <div class="formulario" style="width: 100%;">
+                            <div style="text-align: center;" class="card-body">
+                                <form [formGroup]="form" (ngSubmit)="generarBitacora()" class="needs-validation" novalidate>
+                                    <h5 class="titulo-forms">Nombre Completo</h5>
+                                    <div>
+                                        <input class="form-control" type="text" name="" id="validationCustom01"
+                                            formControlName="nombre" required>
+                                        <div class="invalid-feedback">
+                                            {{alertaFormulario}}
+                                        </div>
+                                        <br>
+                                    </div>
+                                    <h5 class="titulo-forms">Periodo de Informe</h5>
+                                    <div class="centrar-general">
+                                        <div>
+                                            <input class="form-control" type="text" name="" id="validationCustom02"
+                                                formControlName="periodo" required>
+                                            <div class="invalid-feedback">
+                                                {{alertaFormulario}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="centrar-general">
+                                        <tr>
+                                            <td style="padding: 10px; text-align: center;">
+                                                <h5 class="titulo-forms"> Inicio del Periodo </h5>
+                                                <input class="decoration-inputs form-control" formControlName="inicio" type="date"
+                                                    id="validationCustom03" min="2022-01-01" max="" required>
+                                                <div class="invalid-feedback">
+                                                    {{alertaFormulario}}
+                                                </div>
+                                                <br>
+                                            </td>
+                                            <td style="padding: 10px; text-align: center;">
+                                                <h5 class="titulo-forms"> Fin del Periodo </h5>
+                                                <input class="decoration-inputs form-control" formControlName="fin" type="date"
+                                                    id="validationCustom04" min="2022-01-01" max="" required>
+                                                <div class="invalid-feedback">
+                                                    {{alertaFormulario}}
+                                                </div>
+                                                <br>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <h5 style="padding-top: 5px; padding-bottom: 5px;" class="titulo-forms"
+                                        for="validationCustom01">Facultad</h5>
+                                    <select id="validationCustom01" class="custom-select" style="width: 80%;"
+                                        (change)='onSelect(val.value)' #val required>
+                                        <option value="">--Seleccione Facultad--</option>
+                                        <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}
+                                        </option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        {{alertaFormulario}}
+                                    </div>
+                                    <br>
+                                    <h5 style="padding-top: 10px; padding-bottom: 5px;" class="titulo-forms"
+                                        for="validationCustom02">Proyecto Curricular</h5>
+                                    <select id="validationCustom02" class="custom-select" style="width: 80%;"
+                                        (change)='onSelectP(valP.value)' #valP required>
+                                        <option value="">--Seleccione Proyecto--</option>
+                                        <option *ngFor="let file of filesP; let i= index" [value]="filesP[i].id">
+                                            {{filesP[i].name}}</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        {{alertaFormulario}}
+                                    </div>
+                                    <br>
+                                    <h5 class="titulo-forms" style="padding-top: 10px;" for="validationCustom03">Asignatura</h5>
+                                    <select id="validationCustom03" class="custom-select" style="width: 80%;"
+                                        (change)='onSelectM(valM.value)' #valM required>
+                                        <option value="">--Seleccione Asignatura--</option>
+                                        <option *ngFor="let file of filesM; let i= index" [value]="filesM[i].id">
+                                            {{filesM[i].name}}</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        {{alertaFormulario}}
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="centrar-general">
+                                        <button class="button4" style=" border-color: black;">GENERAR BITACORA</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="formulario" style="width: 100%;">
+                            <div>
+                                <h5 style="padding-top: 5px; padding-bottom: 5px; text-align: center;" class="titulo-forms">Vista Previa</h5>
+                                <iframe width="640" height="540" allow="autoplay" id="vistaP"></iframe>
+                            </div>
+                            <div style="text-align: center; visibility: hidden;" id="botones" >
+                            <button class="button4" style="margin-bottom: 20px; border-radius: 30px; margin-right: 10px;" (click)="editarDoc()">
+                                Editar
+                            </button>
+                            <button class="button4" style="margin-bottom: 20px; border-radius: 30px; margin-right: 10px;" (click)="eliminarDoc()">
+                                Eliminar
+                            </button>
+                            <button class="button4" style="margin-bottom: 20px; border-radius: 30px;" (click)="guardarArchivos()">
+                                Aceptar
+                            </button>
+                        </div>
+                           
+                        </div>
+                    </td>
+                   </tr>
+                </table>
+            </div>
     </section>
     <!-- Modal -->
-    <script type="text/javascript">
-        $(function () {
-            $('#Mymodal').modal('show');
-        })
-    </script>
     <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"
         aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -151,8 +177,10 @@
                                 necesarios para generar el reporte final de una clase en especifico, completando los
                                 campos especificados a continuacion, los cuales se alimentan de los directorios creados
                                 en el drive del docente.<br>
-                                Una vez generada la bitácora todos los registros de las clases serán guardados en una
-                                carpeta con nombre del periodo del informe.</p>
+                                <b>Una vez guardada la bitácora todos los registros de las clases serán guardados en una
+                                carpeta con nombre del periodo del informe.</b>
+                                Ejemplo: Periodo de Informe: 2022-3<br>
+                                        Nombre de la carpeta creada: 2022-3</p>
                             <h3><span>2</span>Guía rápida</h3>
                             <p> 1. Digite su nombre completo.<br>
                                 2. Digite el periodo del informe a realizar.<br>

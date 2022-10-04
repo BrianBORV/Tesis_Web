@@ -1,7 +1,7 @@
 <main>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/menu">
+          <a class="navbar-brand" (click)="navMenu()">
             <img width="35" height="30" class="d-inline-block align-text-top" src="./assets/imgs/navbar.png" alt=""></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -89,17 +89,12 @@
         </div>
     </section>
     <!-- Modal -->
-    <script type="text/javascript">
-        $(function () {
-            $('#Mymodal').modal('show');
-        })
-    </script>
     <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"
         aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <section class="contenedor sobre-nosotros">
-                    <h2 class="titulo">Registrar Materia</h2>
+                    <h2 class="titulo">Registrar Asignatura</h2>
                     <div class="contenedor-sobre-nosotros">
                         <img src="./assets/imgs/ilustracion2.svg" alt="" class="imagen-about-us">
                         <div class="contenido-textos">
