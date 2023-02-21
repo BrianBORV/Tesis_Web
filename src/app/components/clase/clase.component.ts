@@ -125,7 +125,7 @@ export class ClaseComponent implements OnInit {
       })
     } else {
       gapi.client.drive.files.list({
-        "q": "name='" + clase + "' and '" + this.IdMateria + "' in parents"
+        "q": "name='" + clase.nombre + "' and '" + this.IdMateria + "' in parents"
       })
         .then((response: any) => {
           // Handle the results here (response.result has the parsed body).
@@ -320,7 +320,7 @@ export class ClaseComponent implements OnInit {
       }
     ]
     this.fileMetadata = {
-      'name': clase,
+      'name': clase.nombre,
       'mimeType': 'application/vnd.google-apps.document',
       'parents': [this.IdMateria]
     };
