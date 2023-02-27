@@ -29,7 +29,7 @@ export class BitacoraComponent implements OnInit {
   archivoActual: any;
   body: any;
   map: any;
-  alertaFormulario:string = "Por favor diligencie este campo";
+  alertaFormulario: string = "Por favor diligencie este campo";
   isLogin: boolean;
   vistaPrevia: any;
 
@@ -46,27 +46,27 @@ export class BitacoraComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.isLogin ==true) {
-      if(localStorage.getItem("InfoB")!="1"){
+    if (this.isLogin == true) {
+      if (localStorage.getItem("InfoB") != "1") {
         var info: any = document.getElementById("modal");
-      info.click();
-      localStorage.setItem("InfoB", "1");
+        info.click();
+        localStorage.setItem("InfoB", "1");
       }
-    var form = document.getElementsByClassName('needs-validation')[0] as HTMLFormElement;
-    form.addEventListener('submit', function(event) {
-      if (form.checkValidity() === false) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      form.classList.add('was-validated');
-    }, false);
-    this.buscarFacultad();
-    }else{
+      var form = document.getElementsByClassName('needs-validation')[0] as HTMLFormElement;
+      form.addEventListener('submit', function (event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+      this.buscarFacultad();
+    } else {
       this.zone.run(() => {
         this.router.navigate(['/index']);
       });
     }
-    
+
   }
 
   onSelect(val: any) {
@@ -134,7 +134,7 @@ export class BitacoraComponent implements OnInit {
     }
   }
 
-  async completarBitacora(inicio:any,fin:any, nombre:any) {
+  async completarBitacora(inicio: any, fin: any, nombre: any) {
     let periodo = this.form.get("periodo")?.value;
     let request: any[] = [];
 
@@ -457,21 +457,18 @@ export class BitacoraComponent implements OnInit {
   }
 
   generarBitacora() {
-    Swal.fire({
-      icon:'info',
-      title: 'Por favor espere',
-      html: `Generando Bitácora`,
-      allowOutsideClick: false,
-      showConfirmButton: false,
-      willOpen: () => {
-          Swal.showLoading()
-        },
-    });
-    var periodo = this.form.get("periodo")?.value;
-    var inicio = this.form.get("inicio")?.value;
-    var fin = this.form.get("fin")?.value;
-    var nombre = this.form.get("nombre")?.value;
-    if (periodo == null || periodo == "" || this.IdFacultad==null || this.IdProyecto==null || this.IdMateria==null || nombre == null || nombre == "" || inicio==null || fin==null) {
+    let bitacora: any = {
+      periodo: "",
+      inicio: "",
+      fin: "",
+      nombre: ""
+
+    }
+    bitacora.periodo = this.form.get("periodo")?.value;
+    bitacora.inicio = this.form.get("inicio")?.value;
+    bitacora.fin = this.form.get("fin")?.value;
+    bitacora.nombre = this.form.get("nombre")?.value;
+    if (bitacora.periodo == null || bitacora.periodo == "" || this.IdFacultad == null || this.IdProyecto == null || this.IdMateria == null || bitacora.nombre == null || bitacora.nombre == "" || bitacora.inicio == null || bitacora.fin == null) {
       Swal.fire({
         title: 'Error',
         text: 'Verifique la información ingresada',
@@ -479,319 +476,485 @@ export class BitacoraComponent implements OnInit {
         confirmButtonText: 'Aceptar'
       })
     } else {
-    this.nombreFacultad = this.files.find(x => x.id == this.IdFacultad).name;
-    this.nombreProyecto = this.filesP.find(x => x.id == this.IdProyecto).name;
-    this.nombreMateria = this.filesM.find(x => x.id == this.IdMateria).name;
-    this.nombreBitacora = 'Informe ' + this.nombreMateria + " " + periodo;
-    console.log("Generando bitacora")
-    gapi.client.drive.files.list({
-      "q": "name='" + this.nombreBitacora + "' and '" + this.IdMateria + "' in parents"
-    })
-      .then((response: any) => {
-        // Handle the results here (response.result has the parsed body).
+
+      gapi.client.drive.files.list({
+        "q": "name='" + bitacora.periodo + "' and '" + this.IdMateria + "' in parents"
+      }).then((response: any) => {
         if (response.result.files.length == 0) {
+          this.nombreFacultad = this.files.find(x => x.id == this.IdFacultad).name;
+          this.nombreProyecto = this.filesP.find(x => x.id == this.IdProyecto).name;
+          this.nombreMateria = this.filesM.find(x => x.id == this.IdMateria).name;
+          this.nombreBitacora = 'Informe ' + this.nombreMateria + " " + bitacora.periodo;
+          console.log("Generando bitacora")
           gapi.client.drive.files.list({
-            "q": "'" + this.IdMateria + "' in parents and not name contains 'Informe' and mimeType = 'application/vnd.google-apps.document'"
+            "q": "name='" + this.nombreBitacora + "' and '" + this.IdMateria + "' in parents"
           })
             .then((response: any) => {
-              var filesId = response.result.files.sort((a: { id: number; }, b: { id: number; }) => {
-                if (a.id > b.id) {
-                  return -1;
-                } else if (a.id < b.id) {
-                  return 1;
-                } else {
-                  return 0;
+              if (response.result.files.length == 0) {
+                this.crearInforme(bitacora);
+              }
+              else {
+                this.IdBitacora = response.result.files[0].id;
+                gapi.client.drive.files.delete({
+                  "fileId": this.IdBitacora
+                }).then(() => {
+                  this.crearInforme(bitacora);
+                })
+              }
+            })
+        } else {
+          Swal.fire({
+            title: 'Confirmación',
+            text: 'El periodo ingresado ya fue registrado para una bitácora previamente. Si continua con la generación de la bitácora se borrará el directorio y su contenido. ¿Desea continuar?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Cancelar'
+          }).then(async (res) => {
+            if (res.value) {
+              this.nombreFacultad = this.files.find(x => x.id == this.IdFacultad).name;
+              this.nombreProyecto = this.filesP.find(x => x.id == this.IdProyecto).name;
+              this.nombreMateria = this.filesM.find(x => x.id == this.IdMateria).name;
+              this.nombreBitacora = 'Informe ' + this.nombreMateria + " " + bitacora.periodo;
+              console.log("Generando bitacora")
+              gapi.client.drive.files.list({
+                "q": "name='" + this.nombreBitacora + "' and '" + this.IdMateria + "' in parents"
+              })
+                .then((response: any) => {
+                  if (response.result.files.length == 0) {
+                    this.crearInforme(bitacora);
+                  }
+                  else {
+                    this.IdBitacora = response.result.files[0].id;
+                    gapi.client.drive.files.delete({
+                      "fileId": this.IdBitacora
+                    }).then(() => {
+                      this.crearInforme(bitacora);
+                    })
+                  }
+                })
+            }
+          })
+        }
+      })
+
+    }
+  }
+
+  async crearInforme(bitacora: any) {
+    Swal.fire({
+      icon: 'info',
+      title: 'Por favor espere',
+      html: `Generando Bitácora`,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      willOpen: () => {
+        Swal.showLoading()
+      },
+    });
+    // Handle the results here (response.result has the parsed body).
+    gapi.client.drive.files.list({
+      "q": "'" + this.IdMateria + "' in parents and not name contains 'Informe' and mimeType = 'application/vnd.google-apps.document'"
+    })
+      .then((response: any) => {
+        if (response.result.files.length == 0) {
+          Swal.fire({
+            title: 'Error',
+            text: 'La asignatura ' + this.nombreMateria + ' no contiene registros de clase, por favor realice primero los registros de clase para poder generar la bitácora.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          })
+        } else {
+          var filesId = response.result.files.sort((a: { id: number; }, b: { id: number; }) => {
+            if (a.id > b.id) {
+              return -1;
+            } else if (a.id < b.id) {
+              return 1;
+            } else {
+              return 0;
+            }
+          })
+          this.fileMetadata = {
+            'name': this.nombreBitacora,
+            'mimeType': 'application/vnd.google-apps.document',
+            'parents': [this.IdMateria]
+          };
+          gapi.client.drive.files.create({
+            resource: this.fileMetadata,
+            fields: 'id'
+          })
+            .then(async (response: any) => {
+              this.IdBitacora = response.result.id;
+              console.log(filesId);
+              var i = 0;
+              this.bodys = [];
+              var request = [
+                {
+                  "insertTable": {
+                    "rows": 6,
+                    "columns": 5,
+                    "location": {
+                      "index": 1
+                    }
+                  }
+                },
+                {
+                  "mergeTableCells": {
+                    "tableRange": {
+                      "tableCellLocation": {
+                        "columnIndex": 1,
+                        "rowIndex": 0,
+                        "tableStartLocation": {
+                          "segmentId": "",
+                          "index": 2
+                        }
+                      },
+                      "rowSpan": 1,
+                      "columnSpan": 2
+                    }
+                  }
+                },
+                {
+                  "mergeTableCells": {
+                    "tableRange": {
+                      "tableCellLocation": {
+                        "columnIndex": 3,
+                        "rowIndex": 1,
+                        "tableStartLocation": {
+                          "segmentId": "",
+                          "index": 2
+                        }
+                      },
+                      "rowSpan": 1,
+                      "columnSpan": 2
+                    }
+                  }
+                },
+                {
+                  "mergeTableCells": {
+                    "tableRange": {
+                      "tableCellLocation": {
+                        "columnIndex": 0,
+                        "rowIndex": 2,
+                        "tableStartLocation": {
+                          "segmentId": "",
+                          "index": 2
+                        }
+                      },
+                      "rowSpan": 1,
+                      "columnSpan": 5
+                    }
+                  }
+                },
+                {
+                  "mergeTableCells": {
+                    "tableRange": {
+                      "tableCellLocation": {
+                        "columnIndex": 0,
+                        "rowIndex": 3,
+                        "tableStartLocation": {
+                          "segmentId": "",
+                          "index": 2
+                        }
+                      },
+                      "rowSpan": 1,
+                      "columnSpan": 5
+                    }
+                  }
+                },
+                {
+                  "mergeTableCells": {
+                    "tableRange": {
+                      "tableCellLocation": {
+                        "columnIndex": 0,
+                        "rowIndex": 4,
+                        "tableStartLocation": {
+                          "segmentId": "",
+                          "index": 2
+                        }
+                      },
+                      "rowSpan": 1,
+                      "columnSpan": 5
+                    }
+                  }
+                },
+                {
+                  "mergeTableCells": {
+                    "tableRange": {
+                      "tableCellLocation": {
+                        "columnIndex": 0,
+                        "rowIndex": 5,
+                        "tableStartLocation": {
+                          "segmentId": "",
+                          "index": 2
+                        }
+                      },
+                      "rowSpan": 1,
+                      "columnSpan": 5
+                    }
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 5
+                    },
+                    "text": "Asignatura:"
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 18
+                    },
+                    "text": "{{MATERIA}}"
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 33
+                    },
+                    "text": "Grupo:"
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 41
+                    },
+                    "text": "{{Grupo}}"
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 53
+                    },
+                    "text": "Fecha Sesión:"
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 68
+                    },
+                    "text": "{{FECHA}}"
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 79
+                    },
+                    "text": "Horario:"
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 89
+                    },
+                    "text": "{{HORARIO}}"
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 105
+                    },
+                    "text": "DESCRIPCIÓN DE LA UNIDAD Y ACTIVIDADES"
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 162
+                    },
+                    "text": "{{TEXTO}}"
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 174
+                    },
+                    "text": "ANEXOS"
+                  }
+                },
+                {
+                  "insertText": {
+                    "location": {
+                      "index": 191
+                    },
+                    "text": "{{ANEXOS}}"
+                  }
                 }
-              })
-              this.fileMetadata = {
-                'name': this.nombreBitacora,
-                'mimeType': 'application/vnd.google-apps.document',
-                'parents': [this.IdMateria]
-              };
-              gapi.client.drive.files.create({
-                resource: this.fileMetadata,
-                fields: 'id'
-              })
-                .then(async (response: any) => {
-                  this.IdBitacora = response.result.id;
-                  console.log(filesId);
-                  var i = 0;
-                  this.bodys = [];
-                  var request = [
-                    {
-                      "insertTable": {
-                        "rows": 6,
-                        "columns": 5,
-                        "location": {
-                          "index": 1
-                        }
-                      }
-                    },
-                    {
-                      "mergeTableCells": {
-                        "tableRange": {
-                          "tableCellLocation": {
-                            "columnIndex": 1,
-                            "rowIndex": 0,
-                            "tableStartLocation": {
-                              "segmentId": "",
-                              "index": 2
-                            }
-                          },
-                          "rowSpan": 1,
-                          "columnSpan": 2
-                        }
-                      }
-                    },
-                    {
-                      "mergeTableCells": {
-                        "tableRange": {
-                          "tableCellLocation": {
-                            "columnIndex": 3,
-                            "rowIndex": 1,
-                            "tableStartLocation": {
-                              "segmentId": "",
-                              "index": 2
-                            }
-                          },
-                          "rowSpan": 1,
-                          "columnSpan": 2
-                        }
-                      }
-                    },
-                    {
-                      "mergeTableCells": {
-                        "tableRange": {
-                          "tableCellLocation": {
-                            "columnIndex": 0,
-                            "rowIndex": 2,
-                            "tableStartLocation": {
-                              "segmentId": "",
-                              "index": 2
-                            }
-                          },
-                          "rowSpan": 1,
-                          "columnSpan": 5
-                        }
-                      }
-                    },
-                    {
-                      "mergeTableCells": {
-                        "tableRange": {
-                          "tableCellLocation": {
-                            "columnIndex": 0,
-                            "rowIndex": 3,
-                            "tableStartLocation": {
-                              "segmentId": "",
-                              "index": 2
-                            }
-                          },
-                          "rowSpan": 1,
-                          "columnSpan": 5
-                        }
-                      }
-                    },
-                    {
-                      "mergeTableCells": {
-                        "tableRange": {
-                          "tableCellLocation": {
-                            "columnIndex": 0,
-                            "rowIndex": 4,
-                            "tableStartLocation": {
-                              "segmentId": "",
-                              "index": 2
-                            }
-                          },
-                          "rowSpan": 1,
-                          "columnSpan": 5
-                        }
-                      }
-                    },
-                    {
-                      "mergeTableCells": {
-                        "tableRange": {
-                          "tableCellLocation": {
-                            "columnIndex": 0,
-                            "rowIndex": 5,
-                            "tableStartLocation": {
-                              "segmentId": "",
-                              "index": 2
-                            }
-                          },
-                          "rowSpan": 1,
-                          "columnSpan": 5
-                        }
-                      }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 5
-                        },
-                        "text": "Asignatura:"
-                      }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 18
-                        },
+              ]
+              do {
+                this.element = filesId[i];
+                await gapi.client.docs.documents.batchUpdate({
+                  "documentId": this.IdBitacora,
+                  "resource": {
+                    "requests": request
+                  }
+                })
+                this.archivoActual = this.element.id;
+                var body: any = null;
+                await gapi.client.docs.documents.get({
+                  "documentId": this.archivoActual
+                }).then((response: any) => {
+                  body = response.result.body;
+                })
+                var request2: any = [];
+                var anexos: string = "";
+                if (body.content[2].table.tableRows[5].tableCells[0].content.length > 1) {
+                  for (let i = 0; i < body.content[2].table.tableRows[5].tableCells[0].content.length; i++) {
+                    console.log(body.content[2].table.tableRows[5].tableCells[0].content[i].paragraph.elements[0].textRun.content)
+                    anexos = anexos.concat(body.content[2].table.tableRows[5].tableCells[0].content[i].paragraph.elements[0].textRun.content);
+                    console.log(anexos)
+                  }
+                } else {
+                  anexos = body.content[2].table.tableRows[5].tableCells[0].content[0].paragraph.elements[0].textRun.content;
+                }
+                request2 = [
+                  {
+                    "replaceAllText": {
+                      "replaceText": body.content[2].table.tableRows[0].tableCells[1].content[0].paragraph.elements[0].textRun.content,
+                      "containsText": {
                         "text": "{{MATERIA}}"
                       }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 33
-                        },
-                        "text": "Grupo:"
-                      }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 41
-                        },
+                    }
+                  },
+                  {
+                    "replaceAllText": {
+                      "replaceText": body.content[2].table.tableRows[0].tableCells[4].content[0].paragraph.elements[0].textRun.content,
+                      "containsText": {
                         "text": "{{Grupo}}"
                       }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 53
-                        },
-                        "text": "Fecha Sesión:"
-                      }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 68
-                        },
+                    }
+                  },
+                  {
+                    "replaceAllText": {
+                      "replaceText": body.content[2].table.tableRows[1].tableCells[1].content[0].paragraph.elements[0].textRun.content,
+                      "containsText": {
                         "text": "{{FECHA}}"
                       }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 79
-                        },
-                        "text": "Horario:"
-                      }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 89
-                        },
+                    }
+                  },
+                  {
+                    "replaceAllText": {
+                      "replaceText": body.content[2].table.tableRows[1].tableCells[3].content[0].paragraph.elements[0].textRun.content,
+                      "containsText": {
                         "text": "{{HORARIO}}"
                       }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 105
-                        },
-                        "text": "DESCRIPCIÓN DE LA UNIDAD Y ACTIVIDADES"
-                      }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 162
-                        },
+                    }
+                  },
+                  {
+                    "replaceAllText": {
+                      "replaceText": body.content[2].table.tableRows[3].tableCells[0].content[0].paragraph.elements[0].textRun.content,
+                      "containsText": {
                         "text": "{{TEXTO}}"
                       }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 174
-                        },
-                        "text": "ANEXOS"
-                      }
-                    },
-                    {
-                      "insertText": {
-                        "location": {
-                          "index": 191
-                        },
+                    }
+                  },
+                  {
+                    "replaceAllText": {
+                      "replaceText": anexos,
+                      "containsText": {
                         "text": "{{ANEXOS}}"
                       }
                     }
-                  ]
-                  do {
-                    this.element = filesId[i];
-                    await gapi.client.docs.documents.batchUpdate({
-                      "documentId": this.IdBitacora,
-                      "resource": {
-                        "requests": request
-                      }
-                    })
-                    this.archivoActual = this.element.id;
-                    var body: any = null;
-                    await gapi.client.docs.documents.get({
-                      "documentId": this.archivoActual
-                    }).then((response: any) => {
-                      body = response.result.body;
-                    })
-                    var request2: any = [];
-                    var anexos: string = "";
-                    if (body.content[2].table.tableRows[5].tableCells[0].content.length > 1) {
-                      for (let i = 0; i < body.content[2].table.tableRows[5].tableCells[0].content.length; i++) {
-                        console.log(body.content[2].table.tableRows[5].tableCells[0].content[i].paragraph.elements[0].textRun.content)
-                        anexos = anexos.concat(body.content[2].table.tableRows[5].tableCells[0].content[i].paragraph.elements[0].textRun.content);
-                        console.log(anexos)
-                      }
-                    } else {
-                      anexos = body.content[2].table.tableRows[5].tableCells[0].content[0].paragraph.elements[0].textRun.content;
-                    }
+                  }
+                ]
+                await gapi.client.docs.documents.batchUpdate({
+                  "documentId": this.IdBitacora,
+                  "resource": {
+                    "requests": request2
+                  }
+                })
+                await gapi.client.docs.documents.get({
+                  "documentId": this.IdBitacora
+                })
+                  .then(async (response: any) => {
+                    console.log("dando estilo")
+                    this.body = response.result.body;
+                    var request: any;
+                    let request2: any;
                     request2 = [
                       {
-                        "replaceAllText": {
-                          "replaceText": body.content[2].table.tableRows[0].tableCells[1].content[0].paragraph.elements[0].textRun.content,
-                          "containsText": {
-                            "text": "{{MATERIA}}"
+                        "updateTableCellStyle": {
+                          "tableRange": {
+                            "tableCellLocation": {
+                              "columnIndex": 0,
+                              "rowIndex": 0,
+                              "tableStartLocation": {
+                                "index": this.body.content[2].startIndex
+                              }
+                            },
+                            "columnSpan": 5,
+                            "rowSpan": 1
+                          },
+                          "fields": "*",
+                          "tableCellStyle": {
+                            "contentAlignment": "MIDDLE"
                           }
                         }
                       },
                       {
-                        "replaceAllText": {
-                          "replaceText": body.content[2].table.tableRows[0].tableCells[4].content[0].paragraph.elements[0].textRun.content,
-                          "containsText": {
-                            "text": "{{Grupo}}"
+                        "updateTableCellStyle": {
+                          "tableRange": {
+                            "tableCellLocation": {
+                              "columnIndex": 0,
+                              "rowIndex": 1,
+                              "tableStartLocation": {
+                                "index": this.body.content[2].startIndex
+                              }
+                            },
+                            "columnSpan": 5,
+                            "rowSpan": 1
+                          },
+                          "fields": "*",
+                          "tableCellStyle": {
+                            "contentAlignment": "MIDDLE"
                           }
                         }
                       },
                       {
-                        "replaceAllText": {
-                          "replaceText": body.content[2].table.tableRows[1].tableCells[1].content[0].paragraph.elements[0].textRun.content,
-                          "containsText": {
-                            "text": "{{FECHA}}"
+                        "updateTableCellStyle": {
+                          "tableRange": {
+                            "tableCellLocation": {
+                              "columnIndex": 0,
+                              "rowIndex": 2,
+                              "tableStartLocation": {
+                                "index": this.body.content[2].startIndex
+                              }
+                            },
+                            "columnSpan": 5,
+                            "rowSpan": 1
+                          },
+                          "fields": "*",
+                          "tableCellStyle": {
+                            "contentAlignment": "MIDDLE"
                           }
                         }
                       },
                       {
-                        "replaceAllText": {
-                          "replaceText": body.content[2].table.tableRows[1].tableCells[3].content[0].paragraph.elements[0].textRun.content,
-                          "containsText": {
-                            "text": "{{HORARIO}}"
-                          }
-                        }
-                      },
-                      {
-                        "replaceAllText": {
-                          "replaceText": body.content[2].table.tableRows[3].tableCells[0].content[0].paragraph.elements[0].textRun.content,
-                          "containsText": {
-                            "text": "{{TEXTO}}"
-                          }
-                        }
-                      },
-                      {
-                        "replaceAllText": {
-                          "replaceText": anexos,
-                          "containsText": {
-                            "text": "{{ANEXOS}}"
+                        "updateTableCellStyle": {
+                          "tableRange": {
+                            "tableCellLocation": {
+                              "columnIndex": 0,
+                              "rowIndex": 4,
+                              "tableStartLocation": {
+                                "index": this.body.content[2].startIndex
+                              }
+                            },
+                            "columnSpan": 5,
+                            "rowSpan": 1
+                          },
+                          "fields": "*",
+                          "tableCellStyle": {
+                            "contentAlignment": "MIDDLE"
                           }
                         }
                       }
@@ -802,474 +965,379 @@ export class BitacoraComponent implements OnInit {
                         "requests": request2
                       }
                     })
-                    await gapi.client.docs.documents.get({
-                      "documentId": this.IdBitacora
+                    let request3: any;
+                    request3 = [
+                      {
+                        "updateParagraphStyle": {
+                          "fields": "alignment",
+                          "paragraphStyle": {
+                            "alignment": "CENTER"
+
+                          },
+                          "range": {
+                            "startIndex": this.body.content[2].table.tableRows[0].tableCells[0].content[0].startIndex,
+                            "endIndex": this.body.content[2].table.tableRows[2].tableCells[0].content[0].endIndex
+
+                          }
+                        }
+
+                      },
+                      {
+                        "updateParagraphStyle": {
+                          "fields": "alignment",
+                          "paragraphStyle": {
+                            "alignment": "CENTER"
+
+                          },
+                          "range": {
+                            "startIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].startIndex,
+                            "endIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].endIndex
+
+                          }
+                        }
+
+                      }
+                    ]
+
+                    let request4: any;
+                    request4 = [
+                      {
+                        "updateTextStyle": {
+                          "fields": "*",
+                          "textStyle": {
+                            "weightedFontFamily": {
+                              "fontFamily": "Calibri"
+                            }
+                          },
+                          "range": {
+                            "startIndex": this.body.content[2].startIndex,
+                            "endIndex": this.body.content[2].endIndex
+                          }
+                        }
+                      },
+                      {
+                        "updateTextStyle": {
+                          "fields": "bold",
+                          "textStyle": {
+                            "bold": true
+
+                          },
+                          "range": {
+                            "startIndex": this.body.content[2].table.tableRows[0].tableCells[0].content[0].startIndex,
+                            "endIndex": this.body.content[2].table.tableRows[0].tableCells[0].content[0].endIndex
+
+                          }
+                        }
+
+                      },
+                      {
+                        "updateTextStyle": {
+                          "fields": "bold",
+                          "textStyle": {
+                            "bold": true
+
+                          },
+                          "range": {
+                            "startIndex": this.body.content[2].table.tableRows[0].tableCells[3].content[0].startIndex,
+                            "endIndex": this.body.content[2].table.tableRows[0].tableCells[3].content[0].endIndex
+
+                          }
+                        }
+
+                      },
+                      {
+                        "updateTextStyle": {
+                          "fields": "bold",
+                          "textStyle": {
+                            "bold": true
+
+                          },
+                          "range": {
+                            "startIndex": this.body.content[2].table.tableRows[1].tableCells[0].content[0].startIndex,
+                            "endIndex": this.body.content[2].table.tableRows[1].tableCells[0].content[0].endIndex
+
+                          }
+                        }
+
+                      },
+                      {
+                        "updateTextStyle": {
+                          "fields": "bold",
+                          "textStyle": {
+                            "bold": true
+
+                          },
+                          "range": {
+                            "startIndex": this.body.content[2].table.tableRows[1].tableCells[2].content[0].startIndex,
+                            "endIndex": this.body.content[2].table.tableRows[1].tableCells[2].content[0].endIndex
+
+                          }
+                        }
+
+                      },
+                      {
+                        "updateTextStyle": {
+                          "fields": "bold",
+                          "textStyle": {
+                            "bold": true
+
+                          },
+                          "range": {
+                            "startIndex": this.body.content[2].table.tableRows[2].tableCells[0].content[0].startIndex,
+                            "endIndex": this.body.content[2].table.tableRows[2].tableCells[0].content[0].endIndex
+
+                          }
+                        }
+
+                      },
+                      {
+                        "updateTextStyle": {
+                          "fields": "bold",
+                          "textStyle": {
+                            "bold": true
+
+                          },
+                          "range": {
+                            "startIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].startIndex,
+                            "endIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].endIndex
+
+                          }
+                        }
+
+                      },
+
+                    ]
+                    await gapi.client.docs.documents.batchUpdate({
+                      "documentId": this.IdBitacora,
+                      "resource": {
+                        "requests": request3
+                      }
                     })
-                      .then(async (response: any) => {
-                        console.log("dando estilo")
-                        this.body = response.result.body;
-                        var request: any;
-                        let request2: any;
-                        request2 = [
-                          {
-                            "updateTableCellStyle": {
-                              "tableRange": {
-                                "tableCellLocation": {
-                                  "columnIndex": 0,
-                                  "rowIndex": 0,
-                                  "tableStartLocation": {
-                                    "index": this.body.content[2].startIndex
-                                  }
-                                },
-                                "columnSpan": 5,
-                                "rowSpan": 1
-                              },
-                              "fields": "*",
-                              "tableCellStyle": {
-                                "contentAlignment": "MIDDLE"
-                              }
-                            }
-                          },
-                          {
-                            "updateTableCellStyle": {
-                              "tableRange": {
-                                "tableCellLocation": {
-                                  "columnIndex": 0,
-                                  "rowIndex": 1,
-                                  "tableStartLocation": {
-                                    "index": this.body.content[2].startIndex
-                                  }
-                                },
-                                "columnSpan": 5,
-                                "rowSpan": 1
-                              },
-                              "fields": "*",
-                              "tableCellStyle": {
-                                "contentAlignment": "MIDDLE"
-                              }
-                            }
-                          },
-                          {
-                            "updateTableCellStyle": {
-                              "tableRange": {
-                                "tableCellLocation": {
-                                  "columnIndex": 0,
-                                  "rowIndex": 2,
-                                  "tableStartLocation": {
-                                    "index": this.body.content[2].startIndex
-                                  }
-                                },
-                                "columnSpan": 5,
-                                "rowSpan": 1
-                              },
-                              "fields": "*",
-                              "tableCellStyle": {
-                                "contentAlignment": "MIDDLE"
-                              }
-                            }
-                          },
-                          {
-                            "updateTableCellStyle": {
-                              "tableRange": {
-                                "tableCellLocation": {
-                                  "columnIndex": 0,
-                                  "rowIndex": 4,
-                                  "tableStartLocation": {
-                                    "index": this.body.content[2].startIndex
-                                  }
-                                },
-                                "columnSpan": 5,
-                                "rowSpan": 1
-                              },
-                              "fields": "*",
-                              "tableCellStyle": {
-                                "contentAlignment": "MIDDLE"
-                              }
-                            }
-                          }
-                        ]
-                        await gapi.client.docs.documents.batchUpdate({
-                          "documentId": this.IdBitacora,
-                          "resource": {
-                            "requests": request2
-                          }
-                        })
-                        let request3: any;
-                        request3 = [
-                          {
-                            "updateParagraphStyle": {
-                              "fields": "alignment",
-                              "paragraphStyle": {
-                                "alignment": "CENTER"
-
-                              },
-                              "range": {
-                                "startIndex": this.body.content[2].table.tableRows[0].tableCells[0].content[0].startIndex,
-                                "endIndex": this.body.content[2].table.tableRows[2].tableCells[0].content[0].endIndex
-
-                              }
-                            }
-
-                          },
-                          {
-                            "updateParagraphStyle": {
-                              "fields": "alignment",
-                              "paragraphStyle": {
-                                "alignment": "CENTER"
-
-                              },
-                              "range": {
-                                "startIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].startIndex,
-                                "endIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].endIndex
-
-                              }
-                            }
-
-                          }
-                        ]
-
-                        let request4: any;
-                        request4 = [
-                          {
-                            "updateTextStyle": {
-                              "fields": "*",
-                              "textStyle": {
-                                "weightedFontFamily": {
-                                  "fontFamily": "Calibri"
+                    await gapi.client.docs.documents.batchUpdate({
+                      "documentId": this.IdBitacora,
+                      "resource": {
+                        "requests": request4
+                      }
+                    })
+                    request = [
+                      {
+                        "updateTableCellStyle": {
+                          "fields": "backgroundColor",
+                          "tableCellStyle": {
+                            "contentAlignment": "MIDDLE",
+                            "backgroundColor": {
+                              "color": {
+                                "rgbColor": {
+                                  "blue": 0.8509804,
+                                  "green": 0.8509804,
+                                  "red": 0.8509804
                                 }
-                              },
-                              "range": {
-                                "startIndex": this.body.content[2].startIndex,
-                                "endIndex": this.body.content[2].endIndex
-                              }
-                            }
-                          },
-                          {
-                            "updateTextStyle": {
-                              "fields": "bold",
-                              "textStyle": {
-                                "bold": true
-
-                              },
-                              "range": {
-                                "startIndex": this.body.content[2].table.tableRows[0].tableCells[0].content[0].startIndex,
-                                "endIndex": this.body.content[2].table.tableRows[0].tableCells[0].content[0].endIndex
-
                               }
                             }
 
                           },
-                          {
-                            "updateTextStyle": {
-                              "fields": "bold",
-                              "textStyle": {
-                                "bold": true
-
-                              },
-                              "range": {
-                                "startIndex": this.body.content[2].table.tableRows[0].tableCells[3].content[0].startIndex,
-                                "endIndex": this.body.content[2].table.tableRows[0].tableCells[3].content[0].endIndex
+                          "tableRange": {
+                            "tableCellLocation": {
+                              "columnIndex": 0,
+                              "rowIndex": 0,
+                              "tableStartLocation": {
+                                "index": this.body.content[2].startIndex
 
                               }
-                            }
-
-                          },
-                          {
-                            "updateTextStyle": {
-                              "fields": "bold",
-                              "textStyle": {
-                                "bold": true
-
-                              },
-                              "range": {
-                                "startIndex": this.body.content[2].table.tableRows[1].tableCells[0].content[0].startIndex,
-                                "endIndex": this.body.content[2].table.tableRows[1].tableCells[0].content[0].endIndex
-
-                              }
-                            }
-
-                          },
-                          {
-                            "updateTextStyle": {
-                              "fields": "bold",
-                              "textStyle": {
-                                "bold": true
-
-                              },
-                              "range": {
-                                "startIndex": this.body.content[2].table.tableRows[1].tableCells[2].content[0].startIndex,
-                                "endIndex": this.body.content[2].table.tableRows[1].tableCells[2].content[0].endIndex
-
-                              }
-                            }
-
-                          },
-                          {
-                            "updateTextStyle": {
-                              "fields": "bold",
-                              "textStyle": {
-                                "bold": true
-
-                              },
-                              "range": {
-                                "startIndex": this.body.content[2].table.tableRows[2].tableCells[0].content[0].startIndex,
-                                "endIndex": this.body.content[2].table.tableRows[2].tableCells[0].content[0].endIndex
-
-                              }
-                            }
-
-                          },
-                          {
-                            "updateTextStyle": {
-                              "fields": "bold",
-                              "textStyle": {
-                                "bold": true
-
-                              },
-                              "range": {
-                                "startIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].startIndex,
-                                "endIndex": this.body.content[2].table.tableRows[4].tableCells[0].content[0].endIndex
-
-                              }
-                            }
-
-                          },
-
-                        ]
-                        await gapi.client.docs.documents.batchUpdate({
-                          "documentId": this.IdBitacora,
-                          "resource": {
-                            "requests": request3
+                            },
+                            "columnSpan": 1,
+                            "rowSpan": 1
                           }
-                        })
-                        await gapi.client.docs.documents.batchUpdate({
-                          "documentId": this.IdBitacora,
-                          "resource": {
-                            "requests": request4
+
+                        }
+
+                      },
+                      {
+                        "updateTableCellStyle": {
+                          "fields": "backgroundColor",
+                          "tableCellStyle": {
+                            "contentAlignment": "MIDDLE",
+                            "backgroundColor": {
+                              "color": {
+                                "rgbColor": {
+                                  "blue": 0.8509804,
+                                  "green": 0.8509804,
+                                  "red": 0.8509804
+                                }
+                              }
+                            }
+
+                          },
+                          "tableRange": {
+                            "tableCellLocation": {
+                              "columnIndex": 3,
+                              "rowIndex": 0,
+                              "tableStartLocation": {
+                                "index": this.body.content[2].startIndex
+
+                              }
+                            },
+                            "columnSpan": 1,
+                            "rowSpan": 1
                           }
-                        })
-                        request = [
-                          {
-                            "updateTableCellStyle": {
-                              "fields": "backgroundColor",
-                              "tableCellStyle": {
-                                "contentAlignment": "MIDDLE",
-                                "backgroundColor": {
-                                  "color": {
-                                    "rgbColor": {
-                                      "blue": 0.8509804,
-                                      "green": 0.8509804,
-                                      "red": 0.8509804
-                                    }
-                                  }
+
+                        }
+
+                      },
+                      {
+                        "updateTableCellStyle": {
+                          "fields": "backgroundColor",
+                          "tableCellStyle": {
+                            "contentAlignment": "MIDDLE",
+                            "backgroundColor": {
+                              "color": {
+                                "rgbColor": {
+                                  "blue": 0.8509804,
+                                  "green": 0.8509804,
+                                  "red": 0.8509804
                                 }
-
-                              },
-                              "tableRange": {
-                                "tableCellLocation": {
-                                  "columnIndex": 0,
-                                  "rowIndex": 0,
-                                  "tableStartLocation": {
-                                    "index": this.body.content[2].startIndex
-
-                                  }
-                                },
-                                "columnSpan": 1,
-                                "rowSpan": 1
                               }
-
                             }
 
                           },
-                          {
-                            "updateTableCellStyle": {
-                              "fields": "backgroundColor",
-                              "tableCellStyle": {
-                                "contentAlignment": "MIDDLE",
-                                "backgroundColor": {
-                                  "color": {
-                                    "rgbColor": {
-                                      "blue": 0.8509804,
-                                      "green": 0.8509804,
-                                      "red": 0.8509804
-                                    }
-                                  }
-                                }
+                          "tableRange": {
+                            "tableCellLocation": {
+                              "columnIndex": 0,
+                              "rowIndex": 1,
+                              "tableStartLocation": {
+                                "index": this.body.content[2].startIndex
 
-                              },
-                              "tableRange": {
-                                "tableCellLocation": {
-                                  "columnIndex": 3,
-                                  "rowIndex": 0,
-                                  "tableStartLocation": {
-                                    "index": this.body.content[2].startIndex
-
-                                  }
-                                },
-                                "columnSpan": 1,
-                                "rowSpan": 1
                               }
-
-                            }
-
-                          },
-                          {
-                            "updateTableCellStyle": {
-                              "fields": "backgroundColor",
-                              "tableCellStyle": {
-                                "contentAlignment": "MIDDLE",
-                                "backgroundColor": {
-                                  "color": {
-                                    "rgbColor": {
-                                      "blue": 0.8509804,
-                                      "green": 0.8509804,
-                                      "red": 0.8509804
-                                    }
-                                  }
-                                }
-
-                              },
-                              "tableRange": {
-                                "tableCellLocation": {
-                                  "columnIndex": 0,
-                                  "rowIndex": 1,
-                                  "tableStartLocation": {
-                                    "index": this.body.content[2].startIndex
-
-                                  }
-                                },
-                                "columnSpan": 1,
-                                "rowSpan": 1
-                              }
-
-                            }
-
-                          },
-                          {
-                            "updateTableCellStyle": {
-                              "fields": "backgroundColor",
-                              "tableCellStyle": {
-                                "contentAlignment": "MIDDLE",
-                                "backgroundColor": {
-                                  "color": {
-                                    "rgbColor": {
-                                      "blue": 0.8509804,
-                                      "green": 0.8509804,
-                                      "red": 0.8509804
-                                    }
-                                  }
-                                }
-
-                              },
-                              "tableRange": {
-                                "tableCellLocation": {
-                                  "columnIndex": 2,
-                                  "rowIndex": 1,
-                                  "tableStartLocation": {
-                                    "index": this.body.content[2].startIndex
-
-                                  }
-                                },
-                                "columnSpan": 1,
-                                "rowSpan": 1
-                              }
-
-                            }
-
-                          },
-                          {
-                            "updateTableCellStyle": {
-                              "fields": "backgroundColor",
-                              "tableCellStyle": {
-                                "contentAlignment": "MIDDLE",
-                                "backgroundColor": {
-                                  "color": {
-                                    "rgbColor": {
-                                      "blue": 0.8509804,
-                                      "green": 0.8509804,
-                                      "red": 0.8509804
-                                    }
-                                  }
-                                }
-
-                              },
-                              "tableRange": {
-                                "tableCellLocation": {
-                                  "columnIndex": 0,
-                                  "rowIndex": 2,
-                                  "tableStartLocation": {
-                                    "index": this.body.content[2].startIndex
-
-                                  }
-                                },
-                                "columnSpan": 5,
-                                "rowSpan": 1
-                              }
-
-                            }
-
-                          },
-                          {
-                            "updateTableCellStyle": {
-                              "fields": "backgroundColor",
-                              "tableCellStyle": {
-                                "contentAlignment": "MIDDLE",
-                                "backgroundColor": {
-                                  "color": {
-                                    "rgbColor": {
-                                      "blue": 0.8509804,
-                                      "green": 0.8509804,
-                                      "red": 0.8509804
-                                    }
-                                  }
-                                }
-
-                              },
-                              "tableRange": {
-                                "tableCellLocation": {
-                                  "columnIndex": 0,
-                                  "rowIndex": 4,
-                                  "tableStartLocation": {
-                                    "index": this.body.content[2].startIndex
-
-                                  }
-                                },
-                                "columnSpan": 5,
-                                "rowSpan": 1
-                              }
-
-                            }
-
+                            },
+                            "columnSpan": 1,
+                            "rowSpan": 1
                           }
-                        ]
-                        await gapi.client.docs.documents.batchUpdate({
-                          "documentId": this.IdBitacora,
-                          "resource": {
-                            "requests": request
+
+                        }
+
+                      },
+                      {
+                        "updateTableCellStyle": {
+                          "fields": "backgroundColor",
+                          "tableCellStyle": {
+                            "contentAlignment": "MIDDLE",
+                            "backgroundColor": {
+                              "color": {
+                                "rgbColor": {
+                                  "blue": 0.8509804,
+                                  "green": 0.8509804,
+                                  "red": 0.8509804
+                                }
+                              }
+                            }
+
+                          },
+                          "tableRange": {
+                            "tableCellLocation": {
+                              "columnIndex": 2,
+                              "rowIndex": 1,
+                              "tableStartLocation": {
+                                "index": this.body.content[2].startIndex
+
+                              }
+                            },
+                            "columnSpan": 1,
+                            "rowSpan": 1
                           }
-                        })
-                      })
-                    i++;
-                  } while (i < filesId.length);
-                  console.log("actualizado")
-                  console.log("Bitacora generada exitosamente")
-                }).then(async (response: any) => {
-                  await this.completarBitacora(inicio,fin, nombre);
-                  await this.encabezadoBitacora();
-                  this.vistaPrev();
-                  Swal.fire({
-                    title: 'Informe Generado',
-                    text: 'El informe de la asignatura ' + this.nombreMateria + ' se ha generado correctamente, por favor validar el informe y hacer click en aceptar para guardarlo.',
-                    icon: 'success',
-                    confirmButtonText: 'Aceptar'
+
+                        }
+
+                      },
+                      {
+                        "updateTableCellStyle": {
+                          "fields": "backgroundColor",
+                          "tableCellStyle": {
+                            "contentAlignment": "MIDDLE",
+                            "backgroundColor": {
+                              "color": {
+                                "rgbColor": {
+                                  "blue": 0.8509804,
+                                  "green": 0.8509804,
+                                  "red": 0.8509804
+                                }
+                              }
+                            }
+
+                          },
+                          "tableRange": {
+                            "tableCellLocation": {
+                              "columnIndex": 0,
+                              "rowIndex": 2,
+                              "tableStartLocation": {
+                                "index": this.body.content[2].startIndex
+
+                              }
+                            },
+                            "columnSpan": 5,
+                            "rowSpan": 1
+                          }
+
+                        }
+
+                      },
+                      {
+                        "updateTableCellStyle": {
+                          "fields": "backgroundColor",
+                          "tableCellStyle": {
+                            "contentAlignment": "MIDDLE",
+                            "backgroundColor": {
+                              "color": {
+                                "rgbColor": {
+                                  "blue": 0.8509804,
+                                  "green": 0.8509804,
+                                  "red": 0.8509804
+                                }
+                              }
+                            }
+
+                          },
+                          "tableRange": {
+                            "tableCellLocation": {
+                              "columnIndex": 0,
+                              "rowIndex": 4,
+                              "tableStartLocation": {
+                                "index": this.body.content[2].startIndex
+
+                              }
+                            },
+                            "columnSpan": 5,
+                            "rowSpan": 1
+                          }
+
+                        }
+
+                      }
+                    ]
+                    await gapi.client.docs.documents.batchUpdate({
+                      "documentId": this.IdBitacora,
+                      "resource": {
+                        "requests": request
+                      }
+                    })
                   })
-
-                })
-
+                i++;
+              } while (i < filesId.length);
+              console.log("actualizado")
+              console.log("Bitacora generada exitosamente")
+            }).then(async (response: any) => {
+              await this.completarBitacora(bitacora.inicio, bitacora.fin, bitacora.nombre);
+              await this.encabezadoBitacora();
+              console.log(this.IdBitacora);
+              await this.vistaPrev();
+              Swal.fire({
+                title: 'Informe Generado',
+                text: 'El informe de la asignatura ' + this.nombreMateria + ' se ha generado correctamente, por favor validar el informe y hacer click en aceptar para guardarlo.',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+              })
             })
         }
       })
-    }
   }
 
   async encabezadoBitacora() {
@@ -1472,6 +1540,7 @@ export class BitacoraComponent implements OnInit {
   }
 
   async guardarArchivos() {
+    let periodo = this.form.get("periodo")?.value;
     Swal.fire({
       title: 'Confirmación',
       text: '¿Está seguro de guardar la bitácora actual? Recuerde que una vez guardada los archivos se transferirán y la bitácora no podrá ser editada.',
@@ -1479,119 +1548,200 @@ export class BitacoraComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar'
-    }).then(async (res)=>{
+    }).then(async (res) => {
       if (res.value) {
-        let periodo = this.form.get("periodo")?.value;
-    var folderId: any;
-    var fileMetadata = {
-      'name': periodo,
-      'mimeType': 'application/vnd.google-apps.folder',
-      'parents': [this.IdMateria]
-    };
-    await gapi.client.drive.files.create({
-      resource: fileMetadata,
-      fields: 'id'
-    }).then((response: any) => {
-      folderId = response.result.id;
-    })
-    await gapi.client.drive.files.list({
-      "q": "'" + this.IdMateria + "' in parents and mimeType = 'application/vnd.google-apps.document'"
-    })
-      .then(async (response: any) => {
-        console.log(response.result.files)
-        var filesId = response.result.files.sort((a: { id: number; name: string; }, b: { id: number; name: string; }) => {
-          console.log(a.name)
-          if (a.name > b.name) {
-            return -1;
-          } else if (a.name < b.name) {
-            return 1;
+        Swal.fire({
+          icon: 'info',
+          title: 'Por favor espere',
+          html: `Guardando Bitácora`,
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          willOpen: () => {
+            Swal.showLoading()
+          },
+        });
+        gapi.client.drive.files.list({
+          "q": "name='" + periodo + "' and '" + this.IdMateria + "' in parents"
+        }).then(async (resultado: any) => {
+          if (resultado.result.files.length == 0) {
+            var folderId: any;
+            var fileMetadata = {
+              'name': periodo,
+              'mimeType': 'application/vnd.google-apps.folder',
+              'parents': [this.IdMateria]
+            };
+            await gapi.client.drive.files.create({
+              resource: fileMetadata,
+              fields: 'id'
+            }).then((response: any) => {
+              folderId = response.result.id;
+            })
+            await gapi.client.drive.files.list({
+              "q": "'" + this.IdMateria + "' in parents and mimeType = 'application/vnd.google-apps.document'"
+            })
+              .then(async (response: any) => {
+                console.log(response.result.files)
+                var filesId = response.result.files.sort((a: { id: number; name: string; }, b: { id: number; name: string; }) => {
+                  console.log(a.name)
+                  if (a.name > b.name) {
+                    return -1;
+                  } else if (a.name < b.name) {
+                    return 1;
+                  } else {
+                    return 0;
+                  }
+                })
+                var index = 0;
+                do {
+                  var fileId = filesId[index];
+                  // Retrieve the existing parents to remove
+                  var file = await gapi.client.drive.files.get({
+                    fileId: fileId.id,
+                    fields: 'parents',
+                  });
+                  // Move the file to the new folder
+                  var previousParents = file.result.parents.map(function (parent: any) {
+                    return parent.id;
+                  }).join(',');
+                  const files = await gapi.client.drive.files.update({
+                    fileId: fileId.id,
+                    addParents: folderId,
+                    removeParents: previousParents,
+                    fields: 'id, parents',
+                  });
+                  console.log(files.status);
+                  index++;
+                } while (index < filesId.length)
+              })
+            Swal.fire({
+              title: 'Bitácora Guardada',
+              text: 'La bitácora generada se ha guardado correctamente.',
+              icon: 'success',
+              confirmButtonText: 'Aceptar'
+            }).then(() => {
+              this.zone.run(() => {
+                this.router.navigate(['/menu']);
+              });
+            })
           } else {
-            return 0;
+            gapi.client.drive.files.delete({
+              "fileId": resultado.result.files[0].id
+            }).then(async () => {
+              var folderId: any;
+              var fileMetadata = {
+                'name': periodo,
+                'mimeType': 'application/vnd.google-apps.folder',
+                'parents': [this.IdMateria]
+              };
+              await gapi.client.drive.files.create({
+                resource: fileMetadata,
+                fields: 'id'
+              }).then((response: any) => {
+                folderId = response.result.id;
+              })
+              await gapi.client.drive.files.list({
+                "q": "'" + this.IdMateria + "' in parents and mimeType = 'application/vnd.google-apps.document'"
+              })
+                .then(async (response: any) => {
+                  console.log(response.result.files)
+                  var filesId = response.result.files.sort((a: { id: number; name: string; }, b: { id: number; name: string; }) => {
+                    console.log(a.name)
+                    if (a.name > b.name) {
+                      return -1;
+                    } else if (a.name < b.name) {
+                      return 1;
+                    } else {
+                      return 0;
+                    }
+                  })
+                  var index = 0;
+                  do {
+                    var fileId = filesId[index];
+                    // Retrieve the existing parents to remove
+                    var file = await gapi.client.drive.files.get({
+                      fileId: fileId.id,
+                      fields: 'parents',
+                    });
+                    // Move the file to the new folder
+                    var previousParents = file.result.parents.map(function (parent: any) {
+                      return parent.id;
+                    }).join(',');
+                    const files = await gapi.client.drive.files.update({
+                      fileId: fileId.id,
+                      addParents: folderId,
+                      removeParents: previousParents,
+                      fields: 'id, parents',
+                    });
+                    console.log(files.status);
+                    index++;
+                  } while (index < filesId.length)
+                })
+              Swal.fire({
+                title: 'Bitácora Guardada',
+                text: 'La bitácora generada se ha guardado correctamente.',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+              }).then(() => {
+                this.zone.run(() => {
+                  this.router.navigate(['/menu']);
+                });
+              })
+            })
           }
         })
-        var index = 0;
-        do {
-          var fileId = filesId[index];
-          // Retrieve the existing parents to remove
-          var file = await gapi.client.drive.files.get({
-            fileId: fileId.id,
-            fields: 'parents',
-          });
-          // Move the file to the new folder
-          var previousParents = file.result.parents.map(function (parent: any) {
-            return parent.id;
-          }).join(',');
-          const files = await gapi.client.drive.files.update({
-            fileId: fileId.id,
-            addParents: folderId,
-            removeParents: previousParents,
-            fields: 'id, parents',
-          });
-          console.log(files.status);
-          index++;
-        } while (index < filesId.length)
-      })
-      Swal.fire({
-        title: 'Bitácora Guardada',
-        text: 'La bitácora generada se ha guardado correctamente.',
-        icon: 'success',
-        confirmButtonText: 'Aceptar'
-      }).then(()=>{
-        this.zone.run(() => {
-          this.router.navigate(['/menu']);
-        });
-      })
       }
     })
   }
 
-  navMenu(){
+  navMenu() {
     this.zone.run(() => {
       this.router.navigate(['/menu']);
     });
   }
 
-  navFacultad(){
+  navFacultad() {
     this.zone.run(() => {
       this.router.navigate(['/registrar_facultad']);
     });
   }
 
-  navProyecto(){
+  navProyecto() {
     this.zone.run(() => {
       this.router.navigate(['/registrar_proyecto']);
     });
   }
 
-  navMateria(){
+  navMateria() {
     this.zone.run(() => {
       this.router.navigate(['/registrar_materia']);
     });
   }
 
-  navClase(){
+  navClase() {
     this.zone.run(() => {
       this.router.navigate(['/registrar_clase']);
     });
   }
 
-  navBitacora(){
+  navBitacora() {
     this.zone.run(() => {
       this.router.navigate(['/generar_bitacora']);
     });
   }
 
-  vistaPrev(){
-    this.vistaPrevia="https://drive.google.com/file/d/"+this.IdBitacora+"/preview";
+  async vistaPrev() {
+    console.log(this.IdBitacora);
+    this.vistaPrevia = "https://drive.google.com/file/d/" + this.IdBitacora + "/preview";
+    console.log(this.vistaPrevia);
     document.getElementById('vistaP')?.setAttribute("src", this.vistaPrevia);
-    document.getElementById('botones')?.setAttribute("style","text-align: center; visibility: visible;" );
+    document.getElementById('botones')?.setAttribute("style", "text-align: center; visibility: visible;");
   }
 
-  editarDoc(){
+  editarDoc() {
     gapi.client.drive.files.delete({
       "fileId": this.IdBitacora
-    }).then(() => { 
-      document.getElementById('botones')?.setAttribute("style","text-align: center; visibility: hidden;" );
+    }).then(() => {
+      document.getElementById('botones')?.setAttribute("style", "text-align: center; visibility: hidden;");
       Swal.fire({
         title: 'Editando Registro',
         text: 'Por favor edite los campos que desee en el formulario y continuación de click en "GENERAR BITACORA".',
@@ -1605,12 +1755,12 @@ export class BitacoraComponent implements OnInit {
     })
   }
 
-  eliminarDoc(){
+  eliminarDoc() {
     gapi.client.drive.files.delete({
       "fileId": this.IdBitacora
-    }).then(() => { 
+    }).then(() => {
       document.getElementById('vistaP')?.setAttribute("src", "");
-      document.getElementById('botones')?.setAttribute("style","text-align: center; visibility: hidden;" );
+      document.getElementById('botones')?.setAttribute("style", "text-align: center; visibility: hidden;");
       Swal.fire({
         title: 'Registro Eliminado',
         text: 'El documento se ha eliminado exitosamente.',

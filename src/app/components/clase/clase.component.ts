@@ -131,13 +131,30 @@ export class ClaseComponent implements OnInit {
           // Handle the results here (response.result has the parsed body).
           if (response.result.files.length == 0) {
             this.registrarClase(clase);
-          }else{
-            this.IdClase = response.result.files[0].id;
-          gapi.client.drive.files.delete({
-            "fileId": this.IdClase
-          }).then(() => { 
-            this.registrarClase(clase);
-          })
+          } else {
+            Swal.fire({
+              title: 'Confirmación',
+              text: 'El registro de clase del día '+clase.nombre+' ya existe. ¿Desea sobreescribirlo?',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Aceptar',
+              cancelButtonText: 'Cancelar'
+            }).then(async (res) => {
+              if (res.value) {
+                this.IdClase = response.result.files[0].id;
+                gapi.client.drive.files.delete({
+                  "fileId": this.IdClase
+                }).then(() => {
+                  this.registrarClase(clase);
+                })
+                Swal.fire({
+                  title: 'Registro Creado',
+                  text: 'El registro de clase se ha creado correctamente.',
+                  icon: 'success',
+                  confirmButtonText: 'Aceptar'
+                })
+              }
+            })
           }
       }, (err: any) => { console.error("Execute error", err); })
 
