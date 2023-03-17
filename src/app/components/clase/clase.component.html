@@ -1,38 +1,34 @@
 <main>
     <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" (click)="navMenu()">
-                <img width="35" height="30" class="d-inline-block align-text-top" src="./assets/imgs/navbar.png"
-                    alt=""></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" (click)="navFacultad()" style="cursor: pointer;">Registrar
-                            Facultad</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" (click)="navProyecto()" style="cursor: pointer;">Registrar
-                            Proyecto</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" (click)="navMateria()" style="cursor: pointer;">Registrar
-                            Asignatura</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" (click)="navClase()"
-                            style="cursor: pointer;">Registrar Clase</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" (click)="navBitacora()" style="cursor: pointer;">Generar
-                            Bitacora</a>
-                    </li>
-                </ul>
-            </div>
+        <a class="navbar-brand" (click)="navMenu()">
+            <img width="35" height="30" class="d-inline-block align-text-top" src="./assets/imgs/navbar.png" alt=""></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav" style="text-align: left;">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" (click)="navFacultad()" style="cursor: pointer;">Registrar
+                        Facultad</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="navProyecto()" style="cursor: pointer;">Registrar
+                        Proyecto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="navMateria()" style="cursor: pointer;">Registrar
+                        Asignatura</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" (click)="navClase()"
+                        style="cursor: pointer;">Registrar Clase</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="navBitacora()" style="cursor: pointer;">Generar
+                        Bitacora</a>
+                </li>
+            </ul>
         </div>
     </nav>
     <section class="menu">
@@ -43,8 +39,8 @@
                 <button type="button" id="modal" class="btn btn-primary"
                     style="border-radius: 20px; opacity: 70%; cursor: alias; font-size: 18px; text-decoration: underline; border-color: black;"
                     data-toggle="modal" data-target=".bd-example-modal-lg">Información</button>
-                    <button type="button" id="modal" class="btn btn-primary"
-                    style="border-radius: 20px; opacity: 70%; font-size: 18px; border-color: black; margin-left: 10px; text-decoration: underline" 
+                <button type="button" id="modal" class="btn btn-primary"
+                    style="border-radius: 20px; opacity: 70%; font-size: 18px; border-color: black; margin-left: 10px; text-decoration: underline"
                     (click)="navMenu()">Volver</button>
             </div>
         </div>
@@ -60,7 +56,8 @@
                                     <select id="validationCustom01" class="custom-select" style="width: 80%;"
                                         (change)='onSelect(val.value)' #val required>
                                         <option value="">--Seleccione Facultad--</option>
-                                        <option *ngFor="let file of files; let i= index" [value]="files[i].id">{{files[i].name}}
+                                        <option *ngFor="let file of files; let i= index" [value]="files[i].id">
+                                            {{files[i].name}}
                                         </option>
                                     </select>
                                     <div class="invalid-feedback">
@@ -79,7 +76,8 @@
                                         {{alertaFormulario}}
                                     </div>
                                     <br>
-                                    <h5 class="titulo-forms" style="padding-top: 10px;" for="validationCustom03">Asignatura</h5>
+                                    <h5 class="titulo-forms" style="padding-top: 10px;" for="validationCustom03">
+                                        Asignatura</h5>
                                     <select id="validationCustom03" class="custom-select" style="width: 80%;"
                                         (change)='onSelectM(valM.value)' #valM required>
                                         <option value="">--Seleccione Asignatura--</option>
@@ -92,11 +90,11 @@
                                     <br>
                                     <h5 class="titulo-forms" style="padding-top: 10px;">Fecha </h5>
                                     <div class="centrar-general">
-                                        <input class="form-control decoration-inputs" style="width: 40%;" formControlName="clase"
-                                            type="date" id="validationCustom04" name="trip-start" min="2022-01-01" max="2025-12-31"
-                                            required>
+                                        <input class="form-control decoration-inputs" style="width: 40%;"
+                                            formControlName="clase" type="date" id="validationCustom04"
+                                            name="trip-start" min="2022-01-01" max="2025-12-31" required>
                                     </div>
-            
+
                                     <div class="invalid-feedback">
                                         {{alertaFormulario}}
                                     </div>
@@ -124,29 +122,31 @@
                                             </td>
                                         </tr>
                                     </table>
-            
+
                                     <h5 class="titulo-forms" style="padding-top: 10px;">Descripción</h5>
                                     <div class="centrar-general">
-                                        <textarea id="validationCustom07" formControlName="texto" name="" id="" rows="10"
-                                            class="decoration-inputs form-control" style="width: 80%;" required></textarea>
+                                        <textarea id="validationCustom07" formControlName="texto" name="" id=""
+                                            rows="10" class="decoration-inputs form-control" style="width: 80%;"
+                                            required></textarea>
                                     </div>
                                     <div class="invalid-feedback">
                                         {{alertaFormulario}}
                                     </div>
                                     <br>
-            
+
                                     <h5 class="titulo-forms" style="padding-top: 10px;">Anexos</h5>
-                                    
+
                                     <div style="padding-bottom: 10px;">
                                         <textarea name="" id="validationCustom08" formControlName="anexos" rows="5"
-                                            class="decoration-inputs" style="width: 60%; " readonly="true" required></textarea>
+                                            class="decoration-inputs" style="width: 60%; " readonly="true"
+                                            required></textarea>
                                         <div class="invalid-feedback">
                                             {{alertaFormulario}}
                                         </div>
                                         <br>
                                     </div>
-                                    <div><button type="button" class="button4" data-toggle="modal" data-target="#exampleModalCenter"
-                                            (click)="buscarAnexos()"
+                                    <div><button type="button" class="button4" data-toggle="modal"
+                                            data-target="#exampleModalCenter" (click)="buscarAnexos()"
                                             style="margin-bottom: 20px; border-radius: 30px; margin-right: 10px;">
                                             Agregar Enlace
                                         </button>
@@ -160,103 +160,109 @@
                                     </button>
                                 </div>
                                 <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">ANEXOS</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <div style="padding-bottom: 10px;">
-                            <div class="titulo-forms">Nombre</div>
-                            <input type="text" class="decoration-inputs" formControlName="nombreAnexo">
-                            <select class="decoration-inputs" style="width: 60%;" [(ngModel)]="anexos"
-                                [ngModelOptions]="{standalone: true}" (change)='onSelectA(valA.value)'
-                                #valA>
-                                <option disabled value="null">--Seleccione Recurso--</option>
-                                <option *ngFor="let file of filesA; let i= index"
-                                    [value]="filesA[i].id">
-                                    {{filesA[i].name}}</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal"
-                        (click)="agregarAnexo()">Agregar</button>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">ANEXOS</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div>
+                                                    <div style="padding-bottom: 10px;">
+                                                        <div class="titulo-forms">Nombre</div>
+                                                        <input type="text" class="decoration-inputs"
+                                                            formControlName="nombreAnexo">
+                                                        <select class="decoration-inputs" style="width: 60%;"
+                                                            [(ngModel)]="anexos" [ngModelOptions]="{standalone: true}"
+                                                            (change)='onSelectA(valA.value)' #valA>
+                                                            <option disabled value="null">--Seleccione Recurso--
+                                                            </option>
+                                                            <option *ngFor="let file of filesA; let i= index"
+                                                                [value]="filesA[i].id">
+                                                                {{filesA[i].name}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                                    (click)="agregarAnexo()">Agregar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </td>
                     <td>
                         <div class="formulario" style="width: 100%;">
                             <div>
-                                <h5 style="padding-top: 5px; padding-bottom: 5px; text-align: center;" class="titulo-forms">Vista Previa</h5>
+                                <h5 style="padding-top: 5px; padding-bottom: 5px; text-align: center;"
+                                    class="titulo-forms">Vista Previa</h5>
                                 <iframe width="640" height="1040" allow="autoplay" id="vistaP"></iframe>
                             </div>
-                            <div style="text-align: center; visibility: hidden;" id="botones" >
-                            <button class="button4" style="margin-bottom: 20px; border-radius: 30px; margin-right: 10px;" (click)="guardarYSalir()">
-                                Guardar y Salir
-                            </button>
-                            <button class="button4" style="margin-bottom: 20px; border-radius: 30px;" (click)="salirSinGuardar()">
-                                Salir sin Guardar
-                            </button>
-                        </div>
-                           
+                            <div style="text-align: center; visibility: hidden;" id="botones">
+                                <button class="button4"
+                                    style="margin-bottom: 20px; border-radius: 30px; margin-right: 10px;"
+                                    (click)="guardarYSalir()">
+                                    Guardar y Salir
+                                </button>
+                                <button class="button4" style="margin-bottom: 20px; border-radius: 30px;"
+                                    (click)="salirSinGuardar()">
+                                    Salir sin Guardar
+                                </button>
+                            </div>
+
                         </div>
                     </td>
                 </tr>
             </table>
         </div>
-            
-        
+
+
         <!-- Modal -->
         <div class="modal fade bd-example-modal-lg" id="Mymodal" tabindex="-1" role="dialog"
-        aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <section class="contenedor sobre-nosotros">
-                    <h2 class="titulo">Registrar Clase</h2>
-                    <div class="contenedor-sobre-nosotros">
-                        <img src="./assets/imgs/ilustracion2.svg" alt="" class="imagen-about-us">
-                        <div class="contenido-textos">
-                            <h3><span>1</span>Resumen</h3>
-                            <p>Por medio de la siguiente pantalla se podran introducir y
-                                seleccionar los datos necesarios para realizar el registro de
-                                actividades llevadas acabo en una sesion de clase, completando
-                                los campos especificados a continuacion, los cuales se alimentan
-                                de los directorios creados en el drive del docente.</p>
-                            <h3><span>2</span>Guía rápida</h3>
-                            <p>1. Seleccione la Facultad.<br>
-                                2. Seleccione el Proyecto Curricular.<br>
-                                3. Seleccione la Materia de la cual registrará la clase.<br>
-                                4. Seleccione la fecha y hora de la sesión de clase.<br>
-                                5. Realice una breve descripción de las actividades realizadas
-                                durante la sesión de clase<br>
-                                6. Si cuenta con listados, presentaciones, o contenido
-                                multimedia que haya utilizado como ayuda para realizar la sesión
-                                puede añadir la información correspondiente con los enlaces de
-                                acceso en el campo de "Anexos".
-                            </p>
+            aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <section class="contenedor sobre-nosotros">
+                        <h2 class="titulo">Registrar Clase</h2>
+                        <div class="contenedor-sobre-nosotros">
+                            <img src="./assets/imgs/ilustracion2.svg" alt="" class="imagen-about-us">
+                            <div class="contenido-textos">
+                                <h3><span>1</span>Resumen</h3>
+                                <p>Por medio de la siguiente pantalla se podran introducir y
+                                    seleccionar los datos necesarios para realizar el registro de
+                                    actividades llevadas acabo en una sesion de clase, completando
+                                    los campos especificados a continuacion, los cuales se alimentan
+                                    de los directorios creados en el drive del docente.</p>
+                                <h3><span>2</span>Guía rápida</h3>
+                                <p>1. Seleccione la Facultad.<br>
+                                    2. Seleccione el Proyecto Curricular.<br>
+                                    3. Seleccione la Materia de la cual registrará la clase.<br>
+                                    4. Seleccione la fecha y hora de la sesión de clase.<br>
+                                    5. Realice una breve descripción de las actividades realizadas
+                                    durante la sesión de clase<br>
+                                    6. Si cuenta con listados, presentaciones, o contenido
+                                    multimedia que haya utilizado como ayuda para realizar la sesión
+                                    puede añadir la información correspondiente con los enlaces de
+                                    acceso en el campo de "Anexos".
+                                </p>
+                            </div>
                         </div>
+                    </section>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
                     </div>
-                </section>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary"
-                        data-dismiss="modal">Aceptar</button>
                 </div>
             </div>
         </div>
-    </div>
-        
+
     </section>
 
 </main>

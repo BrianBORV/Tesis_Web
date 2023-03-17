@@ -1,32 +1,30 @@
 <main>
   <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" (click)="navMenu()" style="-webkit-text-stroke: 1px white;">
-        <img width="35" height="30" class="d-inline-block align-text-top" src="./assets/imgs/navbar.png" alt=""></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" (click)="navFacultad()" id="facultad"
-              style="cursor: pointer;">Registrar Facultad</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" (click)="navProyecto()" id="proyecto" style="cursor: pointer;">Registrar Proyecto</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" (click)="navMateria()" id="materia" style=" cursor: pointer;">Registrar Asignatura</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" (click)="navClase()" id="clase" style=" cursor: pointer;">Registrar Clase</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" (click)="navBitacora()" id="bitacora" style="cursor: pointer;">Generar Bitacora</a>
-          </li>
-        </ul>
-      </div>
+    <a class="navbar-brand" (click)="navMenu()" style="-webkit-text-stroke: 1px white;">
+      <img width="35" height="30" class="d-inline-block align-text-top" src="./assets/imgs/navbar.png" alt=""></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav" style="text-align: left;">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" (click)="navFacultad()" id="facultad"
+            style="cursor: pointer;">Registrar Facultad</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="navProyecto()" id="proyecto" style="cursor: pointer;">Registrar Proyecto</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="navMateria()" id="materia" style=" cursor: pointer;">Registrar Asignatura</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="navClase()" id="clase" style=" cursor: pointer;">Registrar Clase</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="navBitacora()" id="bitacora" style="cursor: pointer;">Generar Bitacora</a>
+        </li>
+      </ul>
     </div>
   </nav>
   <section class="menu">
